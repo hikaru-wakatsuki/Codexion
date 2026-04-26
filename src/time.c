@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 19:01:35 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/26 19:13:24 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/26 19:59:49 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,3 +25,25 @@ long	timestamp_ms(t_sim *sim)
 	return (get_time_ms() - sim->start_ms);
 }
 
+bool	is_stopped(t_sim *sim)
+{
+	bool	ret;
+
+	pthread_mutex_lock(&sim->stop_mutex);
+	ret = sim->stop_simulation;
+	pthread_mutex_unlock(&sim->stop_mutex);
+	return (ret);
+}
+
+void	smart_sleep(long ms, t_sim *sim)
+{
+	long	start;
+
+	start = get_time_ms();
+	while (!is_stopped(sim))
+	{
+		if (get_time_ms() - start >= ms)
+			break ;
+		usleep(500);
+	}
+}
