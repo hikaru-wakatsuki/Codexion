@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/26 18:46:26 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/26 21:07:49 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,8 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
-# include <unistd.h>
 # include <sys/time.h>
+# include <unistd.h>
 
 typedef struct s_sim	t_sim;
 
@@ -47,8 +47,8 @@ typedef struct s_coder
 {
 	int					id;
 	pthread_t			thread;
-	int					left_dongle_index;
-	int					right_dongle_index;
+	int					left_dongle_idx;
+	int					right_dongle_idx;
 	long				last_compile_start_ms;
 	int					compile_count;
 	pthread_mutex_t		state_mutex;
@@ -77,7 +77,7 @@ typedef struct s_sim
 	int					must_compile_count;
 	t_scheduler			scheduler;
 	long				start_ms;
-	bool				stop;
+	bool				stop_simulation;
 	int					finished_count;
 	pthread_mutex_t		stop_mutex;
 	pthread_mutex_t		finish_mutex;
@@ -85,7 +85,7 @@ typedef struct s_sim
 	pthread_t			monitor_thread;
 	t_coder				*coders;
 	t_dongle			*dongles;
-	long				request_seq;
+	long request_seq; // FIFO order counter
 	pthread_mutex_t		seq_mutex;
 }						t_sim;
 
