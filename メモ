@@ -1,0 +1,19 @@
+
+A. 時間管理
+time_to_burnout
+time_to_compile
+time_to_debug
+time_to_refactor
+dongle_cooldown
+burnout 10ms以内検知
+B. 並行処理
+coder = thread
+dongle = shared resource
+mutex
+cond var
+monitor thread
+log競合防止
+C. スケジューリング
+fifo
+edf
+heap 必須
