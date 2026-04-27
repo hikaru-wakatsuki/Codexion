@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 21:35:30 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/27 22:00:56 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/27 22:10:47 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,10 @@ void	cleanup_sim(t_sim *sim)
 		pthread_mutex_destroy(&sim->dongles[i].cond);
 		i++;
 	}
-	pthread_mutex_destroy(&sim->finish)
+	pthread_mutex_destroy(&sim->stop_mutex);
+	pthread_mutex_destroy(&sim->finish_mutex);
+	pthread_mutex_destroy(&sim->log_mutex);
+	pthread_mutex_destroy(&sim->seq_mutex);
+	free(sim->coders);
+	free(sim->dongles);
 }
