@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/27 21:35:30 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/27 22:10:47 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/27 23:00:36 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	cleanup_sim(t_sim *sim)
 	while (i < sim->n_coders)
 	{
 		pthread_mutex_destroy(&sim->dongles[i].mutex);
-		pthread_mutex_destroy(&sim->dongles[i].cond);
+		pthread_cond_destroy(&sim->dongles[i].cond);
 		i++;
 	}
 	pthread_mutex_destroy(&sim->stop_mutex);

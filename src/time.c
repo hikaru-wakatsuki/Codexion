@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 19:01:35 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/26 19:59:49 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/27 23:08:04 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,18 @@ void	smart_sleep(long ms, t_sim *sim)
 			break ;
 		usleep(500);
 	}
+}
+
+void	*monitor_routine(void *arg)
+{
+	t_sim	*sim;
+
+	sim = (t_sim *)arg;
+	while (!is_stopped(sim))
+	{
+		check_burnout(sim);
+		check_finish(sim);
+		smart_sleep(1, sim);
+	}
+	return (NULL);
 }

@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/27 21:33:58 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/27 22:38:28 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ bool	init_coders(t_sim *sim)
 {
 	int	i;
 
-	sim->coders = (t_coder *)(sizeof(t_coder) * sim->n_coders);
+	sim->coders = (t_coder *)malloc(sizeof(t_coder) * sim->n_coders);
 	if (!sim->coders)
 		return (false);
 	i = 0;
@@ -63,7 +63,7 @@ bool	init_dongles(t_sim *sim)
 		sim->dongles[i].cooldown_until_ms = 0;
 		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL))
 			return (false);
-		if (pthread_mutex_init(&sim->dongles[i].cond, NULL))
+		if (pthread_cond_init(&sim->dongles[i].cond, NULL))
 			return (false);
 		sim->dongles[i].wait_queue.size = 0;
 		sim->dongles[i].wait_queue.capacity = 0;
