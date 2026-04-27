@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/26 21:07:49 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/27 23:09:45 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,5 +88,8 @@ typedef struct s_sim
 	long request_seq; // FIFO order counter
 	pthread_mutex_t		seq_mutex;
 }						t_sim;
+
+void	smart_sleep(long ms, t_sim *sim);
+void	*monitor_routine(void *arg);
 
 #endif
