@@ -47,17 +47,3 @@ void	smart_sleep(long ms, t_sim *sim)
 		usleep(500);
 	}
 }
-
-void	*monitor_routine(void *arg)
-{
-	t_sim	*sim;
-
-	sim = (t_sim *)arg;
-	while (!is_stopped(sim))
-	{
-		check_burnout(sim);
-		check_finish(sim);
-		smart_sleep(1, sim);
-	}
-	return (NULL);
-}

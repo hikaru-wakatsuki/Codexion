@@ -10,8 +10,34 @@
 #                                                                              #
 # **************************************************************************** #
 
+NAME = codexion
 
+CC = cc
+CFLAGS = -Wall -Wextra -Werror -pthread
 
-$(NAME), all, clean, fclean, re
+INCDIR = includes
 
-cc -Wall, -Wextra, and -Werror
+DIR = src
+
+SRCS = *.c
+
+SRCS := $(addprefix $(DIR)/, $(SRCS))
+OBJS = $(SRCS:.c=.o)
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $(CFLAGS) $(OBJS) -o $(NAME)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -I $(INCDIR) -c $< -o $@
+
+clean:
+	rm -f $(OBJS)
+
+fclean:
+	rm -f $(NAME)
+
+re: fclean all
+
+.PHONY: all clena fclean re
