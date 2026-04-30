@@ -6,13 +6,15 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/26 21:05:10 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/04/30 12:04:10 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "../include/codexion.h"
+
 bool	check_burnout(t_sim *sim)
 {
-	int	i;
+	int		i;
 	long	now;
 
 	i = 0;
@@ -24,7 +26,7 @@ bool	check_burnout(t_sim *sim)
 		{
 			pthread_mutex_unlock(&sim->coders[i].state_mutex);
 			pthread_mutex_lock(&sim->log_mutex);
-			printf("%ld %d burned out\n", now - sim->start_ms, i + 1);
+			printf("%ld %d burned out\n", timestamp_ms(sim), i + 1);
 			pthread_mutex_unlock(&sim->log_mutex);
 			pthread_mutex_lock(&sim->stop_mutex);
 			sim->stop_simulation = true;

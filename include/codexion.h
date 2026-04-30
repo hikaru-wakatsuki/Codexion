@@ -91,5 +91,10 @@ typedef struct s_sim
 
 void	smart_sleep(long ms, t_sim *sim);
 void	*monitor_routine(void *arg);
+// time.c
+long	get_time_ms(void);
+long	timestamp_ms(t_sim *sim);
+bool	is_stopped(t_sim *sim);
+void	smart_sleep(long ms, t_sim *sim);
 
 #endif
