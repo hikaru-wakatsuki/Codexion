@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/27 22:38:28 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/04 12:20:35 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,6 @@ bool	init_monitor(t_sim *sim)
 
 bool	init_sim(t_sim *sim)
 {
-
 	if (!init_mutexes(sim))
 		return (false);
 	if (!init_coders(sim))
