@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 19:52:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 12:41:54 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:53:08 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,11 +51,4 @@ int	main(int argc, char *argv[])
 	else
 		monitor_created = true;
 	return (shutdown_sim(&sim, sim.n_coders, monitor_created), 0);
-}
-
-void	print_log(t_sim *sim, int id, char *msg)
-{
-	pthread_mutex_lock(&sim->log_mutex);
-	printf("%ld %d %s\n", timestamp_ms(sim), id, msg);
-	pthread_mutex_unlock(&sim->log_mutex);
 }

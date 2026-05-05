@@ -6,11 +6,18 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 02:15:38 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:54:26 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
+
+void	print_log(t_sim *sim, int id, char *msg)
+{
+	pthread_mutex_lock(&sim->log_mutex);
+	printf("%ld %d %s\n", timestamp_ms(sim), id, msg);
+	pthread_mutex_unlock(&sim->log_mutex);
+}
 
 static void	handle_burnout(t_sim *sim, int id)
 {
@@ -26,7 +33,7 @@ static void	handle_burnout(t_sim *sim, int id)
 
 }
 
-bool	check_burnout(t_sim *sim)
+static bool	check_burnout(t_sim *sim)
 {
 	int		i;
 	long	now;
@@ -48,7 +55,7 @@ bool	check_burnout(t_sim *sim)
 	return (false);
 }
 
-bool	check_all_finished(t_sim *sim)
+static bool	check_all_finished(t_sim *sim)
 {
 	bool	all_finished;
 
