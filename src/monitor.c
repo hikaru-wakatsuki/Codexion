@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/30 12:04:10 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 01:42:07 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,14 @@ bool	check_burnout(t_sim *sim)
 	return (false);
 }
 
-bool	check_finish(t_sim *sim)
+bool	check_all_finish(t_sim *sim)
 {
 	int	i;
 
 	i = 0;
-	while (i < &sim->n_coders)
+	while (i < sim->n_coders)
 	{
-		pthread_mutex_lock(&sim->coders[i].state_mutex);
-		if (&sim->coders[i].compile_count < sim->must_compile_count)
-		{
-			pthread_mutex_unlock(&sim->coders[i].state_mutex);
-			return (false);
-		}
-		pthread_mutex_unlock(&sim->coders[i].state_mutex);
+		if 
 		i++;
 	}
 	pthread_mutex_lock(&sim->stop_mutex);
@@ -70,7 +64,7 @@ void	*monitor_routine(void *arg)
 	{
 		if (check_burnout(sim))
 			break ;
-		if (check_finish(sim))
+		if (check_all_finish(sim))
 			break ;
 		smart_sleep(1, sim);
 	}

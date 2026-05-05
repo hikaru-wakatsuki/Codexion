@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/27 23:09:45 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 01:44:04 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,12 +89,19 @@ typedef struct s_sim
 	pthread_mutex_t		seq_mutex;
 }						t_sim;
 
-void	smart_sleep(long ms, t_sim *sim);
-void	*monitor_routine(void *arg);
+// coder.c
+bool					is_finished(t_coder *coder);
+void					*coder_routine(void *arg);
+// monitor.c
+void					*monitor_routine(void *arg);
+// request.c
+void					push_request(t_heap *heap, t_request req, t_sim *sim);
+t_request				pop_request(t_heap *heap, t_sim *sim);
 // time.c
-long	get_time_ms(void);
-long	timestamp_ms(t_sim *sim);
-bool	is_stopped(t_sim *sim);
-void	smart_sleep(long ms, t_sim *sim);
+long					get_time_ms(void);
+long					timestamp_ms(t_sim *sim);
+bool					is_stopped(t_sim *sim);
+void					smart_sleep(long ms, t_sim *sim);
+void					print_log(t_sim *sim, int id, char *msg);
 
 #endif
