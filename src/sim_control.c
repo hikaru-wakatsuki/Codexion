@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_sim.c                                         :+:      :+:    :+:   */
+/*   sim_control.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 06:00:07 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:47:22 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,13 +73,6 @@ static bool	init_dongles(t_sim *sim)
 	return (true);
 }
 
-static bool	init_monitor(t_sim *sim)
-{
-	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
-		return (false);
-	return (true);
-}
-
 bool	init_sim(t_sim *sim)
 {
 	if (!init_mutexes(sim))
@@ -88,7 +81,27 @@ bool	init_sim(t_sim *sim)
 		return (false);
 	if (!init_dongles(sim))
 		return (false);
-	if (!init_monitor(sim))
-		return (false);
 	return (true);
+}
+
+void	cleanup_sim(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->n_coders)
+		pthread_mutex_destroy(&sim->coders[i++].state_mutex);
+	i = 0;
+	while (i < sim->n_coders)
+	{
+		pthread_mutex_destroy(&sim->dongles[i].mutex);
+		pthread_cond_destroy(&sim->dongles[i].cond);
+		i++;
+	}
+	pthread_mutex_destroy(&sim->stop_mutex);
+	pthread_mutex_destroy(&sim->finish_mutex);
+	pthread_mutex_destroy(&sim->log_mutex);
+	pthread_mutex_destroy(&sim->seq_mutex);
+	free(sim->coders);
+	free(sim->dongles);
 }

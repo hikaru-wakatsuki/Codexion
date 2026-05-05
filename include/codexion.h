@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 12:41:28 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:51:04 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,8 +89,6 @@ typedef struct s_sim
 	pthread_mutex_t		seq_mutex;
 }						t_sim;
 
-// cleanup.c
-void					cleanup_sim(t_sim *sim);
 // coder.c
 bool					is_finished(t_coder *coder);
 void					*coder_routine(void *arg);
@@ -99,6 +97,9 @@ void					*monitor_routine(void *arg);
 // request.c
 void					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);
+// sim_control.c
+bool					init_sim(t_sim *sim);
+void					cleanup_sim(t_sim *sim);
 // time.c
 long					get_time_ms(void);
 long					timestamp_ms(t_sim *sim);
