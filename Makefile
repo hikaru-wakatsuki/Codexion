@@ -6,7 +6,7 @@
 #    By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/24 22:55:27 by hwakatsu          #+#    #+#              #
-#    Updated: 2026/04/24 22:55:28 by hwakatsu         ###   ########.fr        #
+#    Updated: 2026/05/05 13:05:17 by hwakatsu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,7 +19,14 @@ INCDIR = includes
 
 DIR = src
 
-SRCS = *.c
+SRCS = 	coders.c \
+		dongles.c \
+		main.c \
+		monitor_control \
+		parse_args \
+		request.c \
+		sim_control.c \
+		time.c
 
 SRCS := $(addprefix $(DIR)/, $(SRCS))
 OBJS = $(SRCS:.c=.o)
