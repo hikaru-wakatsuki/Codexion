@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 01:42:07 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 01:53:05 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,20 +39,23 @@ bool	check_burnout(t_sim *sim)
 	return (false);
 }
 
-bool	check_all_finish(t_sim *sim)
+bool	check_all_finished(t_sim *sim)
 {
-	int	i;
+	bool	all_finished;
 
-	i = 0;
-	while (i < sim->n_coders)
+	if (sim->must_compile_count <= 0)
+		return (false);
+	pthread_mutex_lock(&sim->finish_mutex);
+	all_finished = (sim->finished_count == sim->n_coders);
+	pthread_mutex_unlock(&sim->finish_mutex);
+	if (all_finished)
 	{
-		if 
-		i++;
+		pthread_mutex_lock(&sim->stop_mutex);
+		sim->stop_simulation = true;
+		pthread_mutex_unlock(&sim->stop_mutex);
+		return (true);
 	}
-	pthread_mutex_lock(&sim->stop_mutex);
-	sim->stop_simulation = true;
-	pthread_mutex_unlock(&sim->stop_mutex);
-	return (true);
+	return (false);
 }
 
 void	*monitor_routine(void *arg)
@@ -62,9 +65,9 @@ void	*monitor_routine(void *arg)
 	sim = (t_sim *)arg;
 	while (!is_stopped(sim))
 	{
-		if (check_burnout(sim))
+		if (check_all_finished(sim))
 			break ;
-		if (check_all_finish(sim))
+		if (check_burnout(sim))
 			break ;
 		smart_sleep(1, sim);
 	}
