@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/04 11:18:38 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 13:13:05 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ static void	shift_down(t_heap *heap, int i, t_sim *sim)
 t_request	pop_request(t_heap *heap, t_sim *sim)
 {
 	t_request	top;
-	int			i;
 
 	if (heap->size == 0)
 		return ((t_request){0});

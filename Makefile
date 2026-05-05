@@ -6,7 +6,7 @@
 #    By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/24 22:55:27 by hwakatsu          #+#    #+#              #
-#    Updated: 2026/05/05 13:09:46 by hwakatsu         ###   ########.fr        #
+#    Updated: 2026/05/05 13:11:46 by hwakatsu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,8 +22,8 @@ DIR = src
 SRCS = 	coders.c \
 		dongles.c \
 		main.c \
-		monitor_control \
-		parse_args \
+		monitor_control.c \
+		parse_args.c \
 		request.c \
 		sim_control.c \
 		time.c \
