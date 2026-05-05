@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 05:54:03 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 12:33:54 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,12 @@ static bool	is_positive_number(char *str)
 	return (true);
 }
 
-bool	parse_args(t_sim *sim, char *argv[])
+bool	parse_args(int argc, char *argv[], t_sim *sim)
 {
 	int	i;
 
+	if (argc != 9)
+		return (false);
 	i = 1;
 	while (i <= 7)
 	{
