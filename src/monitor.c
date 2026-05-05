@@ -6,11 +6,25 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 01:53:05 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 02:15:38 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
+
+static void	handle_burnout(t_sim *sim, int id)
+{
+	pthread_mutex_lock(&sim->stop_mutex);
+	if (!sim->stop_simulation)
+	{
+		sim->stop_simulation = true;
+		pthread_mutex_unlock(&sim->stop_mutex);
+		print_log(sim, id, "burned out");
+	}
+	else
+		pthread_mutex_unlock(&sim->stop_mutex);
+
+}
 
 bool	check_burnout(t_sim *sim)
 {
@@ -25,12 +39,7 @@ bool	check_burnout(t_sim *sim)
 		if (now - sim->coders[i].last_compile_start_ms >= sim->time_to_burnout)
 		{
 			pthread_mutex_unlock(&sim->coders[i].state_mutex);
-			pthread_mutex_lock(&sim->log_mutex);
-			printf("%ld %d burned out\n", timestamp_ms(sim), i + 1);
-			pthread_mutex_unlock(&sim->log_mutex);
-			pthread_mutex_lock(&sim->stop_mutex);
-			sim->stop_simulation = true;
-			pthread_mutex_unlock(&sim->stop_mutex);
+			handle_burnout(sim, i + 1);
 			return (true);
 		}
 		pthread_mutex_unlock(&sim->coders[i].state_mutex);

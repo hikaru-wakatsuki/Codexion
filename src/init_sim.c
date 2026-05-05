@@ -6,13 +6,13 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/04 12:20:35 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 06:00:07 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-bool	init_mutexes(t_sim *sim)
+static bool	init_mutexes(t_sim *sim)
 {
 	if (pthread_mutex_init(&sim->stop_mutex, NULL))
 		return (false);
@@ -25,7 +25,7 @@ bool	init_mutexes(t_sim *sim)
 	return (true);
 }
 
-bool	init_coders(t_sim *sim)
+static bool	init_coders(t_sim *sim)
 {
 	int	i;
 
@@ -48,7 +48,7 @@ bool	init_coders(t_sim *sim)
 	return (true);
 }
 
-bool	init_dongles(t_sim *sim)
+static bool	init_dongles(t_sim *sim)
 {
 	int	i;
 
@@ -73,7 +73,7 @@ bool	init_dongles(t_sim *sim)
 	return (true);
 }
 
-bool	init_monitor(t_sim *sim)
+static bool	init_monitor(t_sim *sim)
 {
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim))
 		return (false);

@@ -6,13 +6,13 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/26 21:05:10 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/05 05:54:03 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-bool	is_positive_number(char *str)
+static bool	is_positive_number(char *str)
 {
 	if (!*str)
 		return (false);
