@@ -6,7 +6,7 @@
 #    By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/24 22:55:27 by hwakatsu          #+#    #+#              #
-#    Updated: 2026/05/05 13:05:17 by hwakatsu         ###   ########.fr        #
+#    Updated: 2026/05/05 13:09:46 by hwakatsu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,7 @@ SRCS = 	coders.c \
 		parse_args \
 		request.c \
 		sim_control.c \
-		time.c
+		time.c \
 
 SRCS := $(addprefix $(DIR)/, $(SRCS))
 OBJS = $(SRCS:.c=.o)
@@ -42,7 +42,7 @@ $(NAME): $(OBJS)
 clean:
 	rm -f $(OBJS)
 
-fclean:
+fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
