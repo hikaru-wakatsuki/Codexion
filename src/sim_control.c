@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 12:47:22 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/06 13:36:36 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ static bool	init_coders(t_sim *sim)
 	{
 		sim->coders[i].id = i + 1;
 		sim->coders[i].compile_count = 0;
-		sim->coders[i].last_compile_start_ms = 0;
+		sim->coders[i].last_compile_start_ms = sim->start_ms;
 		sim->coders[i].sim = sim;
 		sim->coders[i].left_dongle_idx = i;
 		sim->coders[i].right_dongle_idx = (i + 1) % sim->n_coders;
@@ -67,7 +67,10 @@ static bool	init_dongles(t_sim *sim)
 			return (false);
 		sim->dongles[i].wait_queue.size = 0;
 		sim->dongles[i].wait_queue.capacity = 0;
-		sim->dongles[i].wait_queue.data = NULL;
+		sim->dongles[i].wait_queue.data
+			= (t_request *)malloc(sizeof(t_request) * sim->n_coders);
+		if (!sim->dongles[i].wait_queue.data)
+			return (false);
 		i++;
 	}
 	return (true);
@@ -81,6 +84,10 @@ bool	init_sim(t_sim *sim)
 		return (false);
 	if (!init_dongles(sim))
 		return (false);
+	sim->start_ms = get_time_ms();
+	sim->stop_simulation = false;
+	sim->finished_count = 0;
+	sim->request_seq = 0;
 	return (true);
 }
 
@@ -96,6 +103,7 @@ void	cleanup_sim(t_sim *sim)
 	{
 		pthread_mutex_destroy(&sim->dongles[i].mutex);
 		pthread_cond_destroy(&sim->dongles[i].cond);
+		free(sim->dongles[i].wait_queue.data);
 		i++;
 	}
 	pthread_mutex_destroy(&sim->stop_mutex);
