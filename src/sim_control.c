@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/06 13:36:36 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/06 13:43:12 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static bool	init_dongles(t_sim *sim)
 		if (pthread_cond_init(&sim->dongles[i].cond, NULL))
 			return (false);
 		sim->dongles[i].wait_queue.size = 0;
-		sim->dongles[i].wait_queue.capacity = 0;
+		sim->dongles[i].wait_queue.capacity = sim->n_coders;
 		sim->dongles[i].wait_queue.data
 			= (t_request *)malloc(sizeof(t_request) * sim->n_coders);
 		if (!sim->dongles[i].wait_queue.data)
@@ -78,16 +78,16 @@ static bool	init_dongles(t_sim *sim)
 
 bool	init_sim(t_sim *sim)
 {
+	sim->start_ms = get_time_ms();
+	sim->stop_simulation = false;
+	sim->finished_count = 0;
+	sim->request_seq = 0;
 	if (!init_mutexes(sim))
 		return (false);
 	if (!init_coders(sim))
 		return (false);
 	if (!init_dongles(sim))
 		return (false);
-	sim->start_ms = get_time_ms();
-	sim->stop_simulation = false;
-	sim->finished_count = 0;
-	sim->request_seq = 0;
 	return (true);
 }
 
