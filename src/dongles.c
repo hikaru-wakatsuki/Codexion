@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/06 14:11:17 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/06 14:18:13 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static void	take_dongle(t_coder *coder, t_dongle *dongle)
 	pthread_mutex_lock(&dongle->mutex);
 	push_request(&dongle->wait_queue, req, coder->sim);
 	while (!is_my_turn(dongle, coder->id)
-		|| dongle->owner_coder_id != 1
+		|| dongle->owner_coder_id != -1
 		|| get_time_ms() < dongle->cooldown_until_ms)
 	{
 		if (is_stopped(coder->sim))
