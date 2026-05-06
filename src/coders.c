@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coder.c                                            :+:      :+:    :+:   */
+/*   coders.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 12:26:38 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 01:41:32 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/06 14:13:54 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void	do_rest(t_coder *coder)
 	print_log(sim, coder->id, "is debugging");
 	smart_sleep(sim->time_to_debug, sim);
 	print_log(sim, coder->id, "is refactoring");
-	smart_sleep(1, sim);
+	smart_sleep(sim->time_to_refactor, sim);
 }
 
 void	*coder_routine(void *arg)
