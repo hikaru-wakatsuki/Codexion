@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 12:26:38 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 09:21:04 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 14:10:50 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,12 @@ static void	do_rest(t_coder *coder)
 	t_sim	*sim;
 
 	sim = coder->sim;
+	if (is_stopped(sim))
+		return ;
 	print_log(sim, coder->id, "is debugging");
 	smart_sleep(sim->time_to_debug, sim);
+	if (is_stopped(sim))
+		return ;
 	print_log(sim, coder->id, "is refactoring");
 	smart_sleep(sim->time_to_refactor, sim);
 }
@@ -79,8 +83,15 @@ void	*coder_routine(void *arg)
 	{
 		if (!take_dongles(coder))
 			break ;
+		if (is_stopped(sim))
+		{
+			release_dongles(coder);
+			break ;
+		}
 		do_compile(coder);
 		release_dongles(coder);
+		if (is_stopped(sim))
+			break ;
 		if (check_finish(coder))
 			break ;
 		do_rest(coder);
