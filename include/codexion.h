@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 09:19:05 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:11:41 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,7 @@ bool					parse_args(int argc, char *argv[], t_sim *sim);
 // request.c
 void					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);
+bool	remove_request(t_heap *heap, int coder_id, t_sim *sim);
 // sim_control.c
 bool					init_sim(t_sim *sim);
 void					cleanup_sim(t_sim *sim);

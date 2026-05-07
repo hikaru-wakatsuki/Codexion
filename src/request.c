@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 13:13:05 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:10:56 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,20 @@ void	push_request(t_heap *heap, t_request req, t_sim *sim)
 	i = heap->size;
 	heap->data[i] = req;
 	heap->size++;
+	while (i > 0)
+	{
+		parent = (i - 1) / 2;
+		if (!is_a_higher_priority(heap->data[i], heap->data[parent], sim))
+			break ;
+		swap(&heap->data[i], &heap->data[parent]);
+		i = parent;
+	}
+}
+
+static void	shift_up(t_heap *heap, int i, t_sim *sim)
+{
+	int	parent;
+
 	while (i > 0)
 	{
 		parent = (i - 1) / 2;
@@ -84,4 +98,27 @@ t_request	pop_request(t_heap *heap, t_sim *sim)
 	heap->size--;
 	shift_down(heap, 0, sim);
 	return (top);
+}
+
+bool	remove_request(t_heap *heap, int coder_id, t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < heap->size)
+	{
+		if (heap->data[i].coder_id == coder_id)
+		{
+			heap->data[i] = heap->data[heap->size - 1];
+			heap->size--;
+			if (i < heap->size)
+			{
+				shift_up(heap, i , sim);
+				shift_down(heap, i, sim);
+			}
+			return (true);
+		}
+		i++;
+	}
+	return (false);
 }

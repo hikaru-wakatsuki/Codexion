@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 09:19:55 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 12:13:05 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ static bool	wait_for_turn(t_coder *coder, t_dongle *dongle)
 	{
 		if (is_stopped(coder->sim))
 		{
+			remove_request(&dongle->wait_queue, coder->id, coder->sim);
 			pthread_mutex_unlock(&dongle->mutex);
 			return (false);
 		}
@@ -89,9 +90,9 @@ bool	take_dongles(t_coder *coder)
 		first = coder->right_dongle_idx;
 		second = coder->left_dongle_idx;
 	}
-	if (take_dongle(coder, &coder->sim->dongles[first]))
+	if (!take_dongle(coder, &coder->sim->dongles[first]))
 		return (false);
-	if (take_dongle(coder, &coder->sim->dongles[second]))
+	if (!take_dongle(coder, &coder->sim->dongles[second]))
 	{
 		release_dongle(coder, &coder->sim->dongles[first]);
 		return (false);
