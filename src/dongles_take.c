@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 02:39:19 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 09:19:55 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ static bool	wait_for_turn(t_coder *coder, t_dongle *dongle)
 	return (true);
 }
 
-static void	take_dongle(t_coder *coder, t_dongle *dongle)
+static bool	take_dongle(t_coder *coder, t_dongle *dongle)
 {
 	t_request	req;
 
@@ -66,14 +66,15 @@ static void	take_dongle(t_coder *coder, t_dongle *dongle)
 	pthread_mutex_lock(&dongle->mutex);
 	push_request(&dongle->wait_queue, req, coder->sim);
 	if (!wait_for_turn(coder, dongle))
-		return ;
+		return (false);
 	pop_request(&dongle->wait_queue, coder->sim);
 	dongle->owner_coder_id = coder->id;
 	pthread_mutex_unlock(&dongle->mutex);
 	print_log(coder->sim, coder->id, "has taken a dongle");
+	return (true);
 }
 
-void	take_dongles(t_coder *coder)
+bool	take_dongles(t_coder *coder)
 {
 	int	first;
 	int	second;
@@ -88,6 +89,12 @@ void	take_dongles(t_coder *coder)
 		first = coder->right_dongle_idx;
 		second = coder->left_dongle_idx;
 	}
-	take_dongle(coder, &coder->sim->dongles[first]);
-	take_dongle(coder, &coder->sim->dongles[second]);
+	if (take_dongle(coder, &coder->sim->dongles[first]))
+		return (false);
+	if (take_dongle(coder, &coder->sim->dongles[second]))
+	{
+		release_dongle(coder, &coder->sim->dongles[first]);
+		return (false);
+	}
+	return (true);
 }

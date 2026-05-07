@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 02:05:45 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 09:19:05 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,8 +93,9 @@ typedef struct s_sim
 bool					is_finished(t_coder *coder);
 void					*coder_routine(void *arg);
 // dongles_take.c
-void					take_dongles(t_coder *coder);
+bool					take_dongles(t_coder *coder);
 // dongles_release.c
+void	release_dongle(t_coder *coder, t_dongle *dongle);
 void					release_dongles(t_coder *coder);
 // main.c
 int						main(int argc, char *argv[]);
