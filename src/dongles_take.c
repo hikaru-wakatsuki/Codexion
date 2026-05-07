@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 12:13:05 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 14:19:05 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,12 @@ static bool	take_dongle(t_coder *coder, t_dongle *dongle)
 	push_request(&dongle->wait_queue, req, coder->sim);
 	if (!wait_for_turn(coder, dongle))
 		return (false);
+	if (is_stopped(coder->sim))
+	{
+		remove_request(&dongle->wait_queue, coder->id, coder->sim);
+		pthread_mutex_unlock(&dongle->mutex);
+		return (false);
+	}
 	pop_request(&dongle->wait_queue, coder->sim);
 	dongle->owner_coder_id = coder->id;
 	pthread_mutex_unlock(&dongle->mutex);
