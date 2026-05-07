@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 02:37:06 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 02:39:19 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ static bool	can_take_dongle(t_coder *coder, t_dongle *dongle)
 		return (false);
 	top = dongle->wait_queue.data[0];
 	return (top.coder_id == coder->id
-		&& dongle->owner_coder_id != -1
+		&& dongle->owner_coder_id == -1
 		&& get_time_ms() >= dongle->cooldown_until_ms);
 }
 
@@ -43,7 +43,7 @@ static bool	wait_for_turn(t_coder *coder, t_dongle *dongle)
 		}
 		if (dongle->wait_queue.size > 0
 			&& dongle->wait_queue.data[0].coder_id == coder->id
-			&& dongle->owner_coder_id != -1)
+			&& dongle->owner_coder_id == -1)
 		{
 			ms_to_timespec(dongle->cooldown_until_ms, &ts);
 			pthread_cond_timedwait(&dongle->cond, &dongle->mutex, &ts);
