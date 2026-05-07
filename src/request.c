@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 12:10:56 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 14:39:05 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,9 @@ static bool	is_a_higher_priority(t_request a, t_request b, t_sim *sim)
 {
 	if (sim->scheduler == FIFO)
 		return (a.arrival_seq < b.arrival_seq);
-	else
+	if (a.deadline_ms != b.deadline_ms)
 		return (a.deadline_ms < b.deadline_ms);
+	return (a.arrival_seq < b.arrival_seq);
 }
 
 static void	swap(t_request *a, t_request *b)

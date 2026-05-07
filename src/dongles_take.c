@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 14:19:05 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/07 14:35:49 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,10 @@ static bool	take_dongle(t_coder *coder, t_dongle *dongle)
 	pthread_mutex_lock(&coder->sim->seq_mutex);
 	req.coder_id = coder->id;
 	req.arrival_seq = coder->sim->request_seq++;
-	req.deadline_ms = get_time_ms() + coder->sim->time_to_compile;
+	pthread_mutex_lock(&coder->state_mutex);
+	req.deadline_ms = coder->last_compile_start_ms
+		+ coder->sim->time_to_burnout;
+	pthread_mutex_unlock(&coder->state_mutex);
 	pthread_mutex_unlock(&coder->sim->seq_mutex);
 	pthread_mutex_lock(&dongle->mutex);
 	push_request(&dongle->wait_queue, req, coder->sim);
