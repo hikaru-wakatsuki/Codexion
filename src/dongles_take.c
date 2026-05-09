@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dongle_take_utils.c                                :+:      :+:    :+:   */
+/*   dongles_take.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/09 09:03:18 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/09 09:14:08 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ static void	set_order(int *first, int *second, t_coder *coder)
 {
 	if (coder->left_dongle_idx < coder->right_dongle_idx)
 	{
-		first = coder->left_dongle_idx;
-		second = coder->right_dongle_idx;
+		*first = coder->left_dongle_idx;
+		*second = coder->right_dongle_idx;
 	}
 	else
 	{
-		first = coder->right_dongle_idx;
-		second = coder->left_dongle_idx;
+		*first = coder->right_dongle_idx;
+		*second = coder->left_dongle_idx;
 	}
 }
 
@@ -36,7 +36,7 @@ static long	get_deadline(t_coder *coder)
 	return (deadline);
 }
 
-static bool	should_take_first_now(t_coder *coder, int first)
+static bool	should_take_first_now(t_coder *coder)
 {
 	t_coder	*left;
 	t_coder	*right;
@@ -62,7 +62,7 @@ bool	take_dongles(t_coder *coder)
 	set_order(&first, &second, coder);
 	while (!is_stopped(coder->sim))
 	{
-		if (!should_take_first_now(coder, first))
+		if (!should_take_first_now(coder))
 		{
 			usleep(500);
 			continue ;
