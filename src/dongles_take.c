@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/09 09:14:08 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/10 02:38:10 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,13 +67,14 @@ bool	take_dongles(t_coder *coder)
 			usleep(500);
 			continue ;
 		}
+		if (!take_dongle(coder, &coder->sim->dongles[first]))
+			return (false);
+		if (!take_dongle(coder, &coder->sim->dongles[second]))
+		{
+			release_dongle(coder, &coder->sim->dongles[first]);
+			return (false);
+		}
+		return (true);
 	}
-	if (!take_dongle(coder, &coder->sim->dongles[first]))
-		return (false);
-	if (!take_dongle(coder, &coder->sim->dongles[second]))
-	{
-		release_dongle(coder, &coder->sim->dongles[first]);
-		return (false);
-	}
-	return (true);
+	return (false);
 }
