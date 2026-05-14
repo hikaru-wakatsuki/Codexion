@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   monitor.c                                          :+:      :+:    :+:   */
+/*   monitor_control.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/05 12:54:26 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/14 09:09:47 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,20 @@ void	print_log(t_sim *sim, int id, char *msg)
 	pthread_mutex_unlock(&sim->log_mutex);
 }
 
+static void	broadcast_dongles(t_sim *sim)
+{
+	int	i;
+
+	i = 0;
+	while (i < sim->n_coders)
+	{
+		pthread_mutex_lock(&sim->dongles[i].mutex);
+		pthread_cond_broadcast(&sim->dongles[i].cond);
+		pthread_mutex_unlock(&sim->dongles[i].mutex);
+		i++;
+	}
+}
+
 static void	handle_burnout(t_sim *sim, int id)
 {
 	pthread_mutex_lock(&sim->stop_mutex);
@@ -26,11 +40,11 @@ static void	handle_burnout(t_sim *sim, int id)
 	{
 		sim->stop_simulation = true;
 		pthread_mutex_unlock(&sim->stop_mutex);
+		broadcast_dongles(sim);
 		print_log(sim, id, "burned out");
 	}
 	else
 		pthread_mutex_unlock(&sim->stop_mutex);
-
 }
 
 static bool	check_burnout(t_sim *sim)
@@ -58,6 +72,7 @@ static bool	check_burnout(t_sim *sim)
 static bool	check_all_finished(t_sim *sim)
 {
 	bool	all_finished;
+	bool	should_stop;
 
 	if (sim->must_compile_count <= 0)
 		return (false);
@@ -67,8 +82,12 @@ static bool	check_all_finished(t_sim *sim)
 	if (all_finished)
 	{
 		pthread_mutex_lock(&sim->stop_mutex);
-		sim->stop_simulation = true;
+		should_stop = !sim->stop_simulation;
+		if (should_stop)
+			sim->stop_simulation = true;
 		pthread_mutex_unlock(&sim->stop_mutex);
+		if (should_stop)
+			broadcast_dongles(sim);
 		return (true);
 	}
 	return (false);

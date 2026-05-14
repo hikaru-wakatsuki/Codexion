@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   dongles_take.c                                     :+:      :+:    :+:   */
+/*   dongle_take.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/30 12:47:07 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/09 09:05:16 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/14 08:55:27 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ bool	take_dongle(t_coder *coder, t_dongle *dongle)
 		return (false);
 	if (is_stopped(coder->sim))
 	{
-		remove_request(&dongle->wait_queue, coder->id, coder->sim);
+		pop_request(&dongle->wait_queue, coder->sim);
 		pthread_mutex_unlock(&dongle->mutex);
 		return (false);
 	}

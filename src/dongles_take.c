@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/10 02:38:10 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/14 09:11:41 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,34 +26,6 @@ static void	set_order(int *first, int *second, t_coder *coder)
 	}
 }
 
-static long	get_deadline(t_coder *coder)
-{
-	long	deadline;
-
-	pthread_mutex_lock(&coder->state_mutex);
-	deadline = coder->last_compile_start_ms + coder->sim->time_to_burnout;
-	pthread_mutex_unlock(&coder->state_mutex);
-	return (deadline);
-}
-
-static bool	should_take_first_now(t_coder *coder)
-{
-	t_coder	*left;
-	t_coder	*right;
-	t_sim	*sim;
-
-	sim = coder->sim;
-	if (sim->scheduler != EDF)
-		return (true);
-	left = &sim->coders[(coder->id - 2 + sim->n_coders) % sim->n_coders];
-	right = &sim->coders[coder->id % sim->n_coders];
-	if (get_deadline(left) < get_deadline(coder))
-		return (false);
-	if (get_deadline(right) < get_deadline(coder))
-		return (false);
-	return (true);
-}
-
 bool	take_dongles(t_coder *coder)
 {
 	int	first;
@@ -62,11 +34,6 @@ bool	take_dongles(t_coder *coder)
 	set_order(&first, &second, coder);
 	while (!is_stopped(coder->sim))
 	{
-		if (!should_take_first_now(coder))
-		{
-			usleep(500);
-			continue ;
-		}
 		if (!take_dongle(coder, &coder->sim->dongles[first]))
 			return (false);
 		if (!take_dongle(coder, &coder->sim->dongles[second]))
