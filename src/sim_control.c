@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/06 13:43:12 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/15 16:23:15 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ static bool	init_mutexes(t_sim *sim)
 		return (false);
 	if (pthread_mutex_init(&sim->log_mutex, NULL))
 		return (false);
-	if (pthread_mutex_init(&sim->seq_mutex, NULL))
-		return (false);
+	//if (pthread_mutex_init(&sim->seq_mutex, NULL))
+	//	return (false);
 	return (true);
 }
 
@@ -61,6 +61,7 @@ static bool	init_dongles(t_sim *sim)
 		sim->dongles[i].id = i;
 		sim->dongles[i].owner_coder_id = -1;
 		sim->dongles[i].cooldown_until_ms = 0;
+		sim->dongles[i].local_seq = 0;
 		if (pthread_mutex_init(&sim->dongles[i].mutex, NULL))
 			return (false);
 		if (pthread_cond_init(&sim->dongles[i].cond, NULL))
@@ -81,7 +82,7 @@ bool	init_sim(t_sim *sim)
 	sim->start_ms = get_time_ms();
 	sim->stop_simulation = false;
 	sim->finished_count = 0;
-	sim->request_seq = 0;
+	//sim->request_seq = 0;
 	if (!init_mutexes(sim))
 		return (false);
 	if (!init_coders(sim))
@@ -109,7 +110,7 @@ void	cleanup_sim(t_sim *sim)
 	pthread_mutex_destroy(&sim->stop_mutex);
 	pthread_mutex_destroy(&sim->finish_mutex);
 	pthread_mutex_destroy(&sim->log_mutex);
-	pthread_mutex_destroy(&sim->seq_mutex);
+	//pthread_mutex_destroy(&sim->seq_mutex);
 	free(sim->coders);
 	free(sim->dongles);
 }

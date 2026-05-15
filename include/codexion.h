@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/09 09:08:55 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/15 16:14:35 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_dongle
 	int					id;
 	int					owner_coder_id;
 	long				cooldown_until_ms;
+	long				local_seq;
 	pthread_mutex_t		mutex;
 	pthread_cond_t		cond;
 	t_heap				wait_queue;
@@ -85,8 +86,8 @@ typedef struct s_sim
 	pthread_t			monitor_thread;
 	t_coder				*coders;
 	t_dongle			*dongles;
-	long request_seq; // FIFO order counter
-	pthread_mutex_t		seq_mutex;
+	//long 				request_seq;
+	//pthread_mutex_t		seq_mutex;
 }						t_sim;
 
 // coders.c
