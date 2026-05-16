@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/15 16:22:32 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 01:53:47 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ static void	set_order(int *first, int *second, t_coder *coder)
 	}
 }
 
-//bool	take_dongles(t_coder *coder)
+// bool	take_dongles(t_coder *coder)
 //{
 //	int	first;
 //	int	second;
@@ -46,11 +46,30 @@ static void	set_order(int *first, int *second, t_coder *coder)
 //	return (false);
 //}
 
-static bool	is_my_turn(t_dongle *dongle, int coder_id)
+// static bool	is_my_turn(t_dongle *dongle, int coder_id)
+//{
+//	if (dongle->wait_queue.size == 0)
+//		return (false);
+//	return (dongle->wait_queue.data[0].coder_id == coder_id);
+// }
+
+static bool	no_higher_priority(t_dongle *dongle, t_request *req, t_sim *sim)
 {
-	if (dongle->wait_queue.size == 0)
-		return (false);
-	return (dongle->wait_queue.data[0].coder_id == coder_id);
+	int	i;
+
+	i = 0;
+	while (i < dongle->wait_queue.size)
+	{
+		if (dongle->wait_queue.data[i].coder_id == req->coder_id)
+		{
+			i++;
+			continue ;
+		}
+		if (is_a_higher_priority(dongle->wait_queue.data[i], *req, sim))
+			return (false);
+		i++;
+	}
+	return (true);
 }
 
 static void	push_both_requests(t_coder *coder, t_request *req, int first,
@@ -78,7 +97,8 @@ static void	remove_both_requests(t_coder *coder, int first, int second)
 	pthread_mutex_unlock(&coder->sim->dongles[second].mutex);
 }
 
-static bool	try_take_both_dongles(t_coder *coder, int first, int second)
+static bool	try_take_both_dongles(t_coder *coder, int first, int second,
+		t_request *req)
 {
 	t_sim		*sim;
 	t_dongle	*left;
@@ -91,7 +111,8 @@ static bool	try_take_both_dongles(t_coder *coder, int first, int second)
 	now = get_time_ms();
 	pthread_mutex_lock(&left->mutex);
 	pthread_mutex_lock(&right->mutex);
-	if (!is_my_turn(left, coder->id) || !is_my_turn(right, coder->id)
+	if (!no_higher_priority(left, req, sim)
+		|| !no_higher_priority(right, req, sim)
 		|| left->owner_coder_id != -1 || right->owner_coder_id != -1
 		|| now < left->cooldown_until_ms || now < right->cooldown_until_ms)
 	{
@@ -116,6 +137,12 @@ bool	take_dongles(t_coder *coder)
 	int			first;
 	int			second;
 
+	if (coder->sim->n_coders == 1)
+	{
+		while (!is_stopped(coder->sim))
+			usleep(500);
+		return (false);
+	}
 	set_order(&first, &second, coder);
 	req.coder_id = coder->id;
 	pthread_mutex_lock(&coder->state_mutex);
@@ -125,7 +152,7 @@ bool	take_dongles(t_coder *coder)
 	push_both_requests(coder, &req, first, second);
 	while (!is_stopped(coder->sim))
 	{
-		if (try_take_both_dongles(coder, first, second))
+		if (try_take_both_dongles(coder, first, second, &req))
 			return (true);
 		usleep(500);
 	}

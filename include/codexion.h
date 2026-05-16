@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/15 16:14:35 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 01:57:42 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,20 +86,16 @@ typedef struct s_sim
 	pthread_t			monitor_thread;
 	t_coder				*coders;
 	t_dongle			*dongles;
-	//long 				request_seq;
-	//pthread_mutex_t		seq_mutex;
 }						t_sim;
 
 // coders.c
 bool					is_finished(t_coder *coder);
 void					*coder_routine(void *arg);
-// dongle_take.c
-bool					take_dongle(t_coder *coder, t_dongle *dongle);
-// dongles_take.c
-bool					take_dongles(t_coder *coder);
 // dongles_release.c
 void					release_dongle(t_coder *coder, t_dongle *dongle);
 void					release_dongles(t_coder *coder);
+// dongles_take.c
+bool					take_dongles(t_coder *coder);
 // main.c
 int						main(int argc, char *argv[]);
 // monitor_control.c
@@ -108,6 +104,8 @@ void					*monitor_routine(void *arg);
 // parse_args.c
 bool					parse_args(int argc, char *argv[], t_sim *sim);
 // request.c
+bool					is_a_higher_priority(t_request a, t_request b,
+							t_sim *sim);
 void					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);
 bool					remove_request(t_heap *heap, int coder_id, t_sim *sim);

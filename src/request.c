@@ -6,13 +6,13 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 14:39:05 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/15 16:39:01 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-static bool	is_a_higher_priority(t_request a, t_request b, t_sim *sim)
+bool	is_a_higher_priority(t_request a, t_request b, t_sim *sim)
 {
 	if (sim->scheduler == FIFO)
 		return (a.arrival_seq < b.arrival_seq);
