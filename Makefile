@@ -6,7 +6,7 @@
 #    By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/24 22:55:27 by hwakatsu          #+#    #+#              #
-#    Updated: 2026/05/16 14:55:39 by hwakatsu         ###   ########.fr        #
+#    Updated: 2026/05/16 16:28:00 by hwakatsu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,6 +27,7 @@ SRCS = 	coders.c \
 		parse_args.c \
 		request.c \
 		sim_control.c \
+		threads_control.c \
 		time.c \
 
 SRCS := $(addprefix $(DIR)/, $(SRCS))

@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 14:41:52 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 16:26:52 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,9 @@ bool					remove_request(t_heap *heap, int coder_id, t_sim *sim);
 // sim_control.c
 bool					init_sim(t_sim *sim);
 void					cleanup_sim(t_sim *sim);
+// threads_control.c
+bool					start_threads(t_sim *sim);
+void					join_threads(t_sim *sim);
 // time.c
 long					get_time_ms(void);
 long					timestamp_ms(t_sim *sim);
