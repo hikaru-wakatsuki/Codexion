@@ -6,24 +6,11 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/15 16:23:15 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 14:44:02 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
-
-static bool	init_mutexes(t_sim *sim)
-{
-	if (pthread_mutex_init(&sim->stop_mutex, NULL))
-		return (false);
-	if (pthread_mutex_init(&sim->finish_mutex, NULL))
-		return (false);
-	if (pthread_mutex_init(&sim->log_mutex, NULL))
-		return (false);
-	//if (pthread_mutex_init(&sim->seq_mutex, NULL))
-	//	return (false);
-	return (true);
-}
 
 static bool	init_coders(t_sim *sim)
 {
@@ -36,6 +23,7 @@ static bool	init_coders(t_sim *sim)
 	while (i < sim->n_coders)
 	{
 		sim->coders[i].id = i + 1;
+		sim->coders[i].is_thread_created = false;
 		sim->coders[i].compile_count = 0;
 		sim->coders[i].last_compile_start_ms = sim->start_ms;
 		sim->coders[i].sim = sim;
@@ -82,8 +70,12 @@ bool	init_sim(t_sim *sim)
 	sim->start_ms = get_time_ms();
 	sim->stop_simulation = false;
 	sim->finished_count = 0;
-	//sim->request_seq = 0;
-	if (!init_mutexes(sim))
+	sim->is_thread_created = false;
+	if (pthread_mutex_init(&sim->stop_mutex, NULL))
+		return (false);
+	if (pthread_mutex_init(&sim->finish_mutex, NULL))
+		return (false);
+	if (pthread_mutex_init(&sim->log_mutex, NULL))
 		return (false);
 	if (!init_coders(sim))
 		return (false);
@@ -110,7 +102,6 @@ void	cleanup_sim(t_sim *sim)
 	pthread_mutex_destroy(&sim->stop_mutex);
 	pthread_mutex_destroy(&sim->finish_mutex);
 	pthread_mutex_destroy(&sim->log_mutex);
-	//pthread_mutex_destroy(&sim->seq_mutex);
 	free(sim->coders);
 	free(sim->dongles);
 }

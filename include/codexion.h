@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 01:57:42 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 14:41:52 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ typedef struct s_coder
 {
 	int					id;
 	pthread_t			thread;
+	bool				is_thread_created;
 	int					left_dongle_idx;
 	int					right_dongle_idx;
 	long				last_compile_start_ms;
@@ -84,6 +85,7 @@ typedef struct s_sim
 	pthread_mutex_t		finish_mutex;
 	pthread_mutex_t		log_mutex;
 	pthread_t			monitor_thread;
+	bool				is_thread_created;
 	t_coder				*coders;
 	t_dongle			*dongles;
 }						t_sim;

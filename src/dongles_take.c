@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 01:53:47 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 11:22:04 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,33 +25,6 @@ static void	set_order(int *first, int *second, t_coder *coder)
 		*second = coder->left_dongle_idx;
 	}
 }
-
-// bool	take_dongles(t_coder *coder)
-//{
-//	int	first;
-//	int	second;
-
-//	set_order(&first, &second, coder);
-//	while (!is_stopped(coder->sim))
-//	{
-//		if (!take_dongle(coder, &coder->sim->dongles[first]))
-//			return (false);
-//		if (!take_dongle(coder, &coder->sim->dongles[second]))
-//		{
-//			release_dongle(coder, &coder->sim->dongles[first]);
-//			return (false);
-//		}
-//		return (true);
-//	}
-//	return (false);
-//}
-
-// static bool	is_my_turn(t_dongle *dongle, int coder_id)
-//{
-//	if (dongle->wait_queue.size == 0)
-//		return (false);
-//	return (dongle->wait_queue.data[0].coder_id == coder_id);
-// }
 
 static bool	no_higher_priority(t_dongle *dongle, t_request *req, t_sim *sim)
 {
@@ -101,31 +74,31 @@ static bool	try_take_both_dongles(t_coder *coder, int first, int second,
 		t_request *req)
 {
 	t_sim		*sim;
-	t_dongle	*left;
-	t_dongle	*right;
+	t_dongle	*first_take_dongle;
+	t_dongle	*second_take_dongle;
 	long		now;
 
 	sim = coder->sim;
-	left = &sim->dongles[first];
-	right = &sim->dongles[second];
+	first_take_dongle = &sim->dongles[first];
+	second_take_dongle = &sim->dongles[second];
 	now = get_time_ms();
-	pthread_mutex_lock(&left->mutex);
-	pthread_mutex_lock(&right->mutex);
-	if (!no_higher_priority(left, req, sim)
-		|| !no_higher_priority(right, req, sim)
-		|| left->owner_coder_id != -1 || right->owner_coder_id != -1
-		|| now < left->cooldown_until_ms || now < right->cooldown_until_ms)
+	pthread_mutex_lock(&first_take_dongle->mutex);
+	pthread_mutex_lock(&second_take_dongle->mutex);
+	if (!no_higher_priority(first_take_dongle, req, sim)
+		|| !no_higher_priority(second_take_dongle, req, sim)
+		|| first_take_dongle->owner_coder_id != -1 || second_take_dongle->owner_coder_id != -1
+		|| now < first_take_dongle->cooldown_until_ms || now < second_take_dongle->cooldown_until_ms)
 	{
-		pthread_mutex_unlock(&right->mutex);
-		pthread_mutex_unlock(&left->mutex);
+		pthread_mutex_unlock(&second_take_dongle->mutex);
+		pthread_mutex_unlock(&first_take_dongle->mutex);
 		return (false);
 	}
-	pop_request(&left->wait_queue, sim);
-	pop_request(&right->wait_queue, sim);
-	left->owner_coder_id = coder->id;
-	right->owner_coder_id = coder->id;
-	pthread_mutex_unlock(&right->mutex);
-	pthread_mutex_unlock(&left->mutex);
+	pop_request(&first_take_dongle->wait_queue, sim);
+	pop_request(&second_take_dongle->wait_queue, sim);
+	first_take_dongle->owner_coder_id = coder->id;
+	second_take_dongle->owner_coder_id = coder->id;
+	pthread_mutex_unlock(&second_take_dongle->mutex);
+	pthread_mutex_unlock(&first_take_dongle->mutex);
 	print_log(coder->sim, coder->id, "has taken a dongle");
 	print_log(coder->sim, coder->id, "has taken a dongle");
 	return (true);

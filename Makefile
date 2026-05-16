@@ -6,7 +6,7 @@
 #    By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/24 22:55:27 by hwakatsu          #+#    #+#              #
-#    Updated: 2026/05/09 09:09:57 by hwakatsu         ###   ########.fr        #
+#    Updated: 2026/05/16 14:55:39 by hwakatsu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,6 @@ INCDIR = includes
 DIR = src
 
 SRCS = 	coders.c \
-		dongle_take.c \
 		dongles_release.c \
 		dongles_take.c \
 		main.c \
