@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 14:44:02 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 16:35:41 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,7 @@ bool	init_sim(t_sim *sim)
 	sim->start_ms = get_time_ms();
 	sim->stop_simulation = false;
 	sim->finished_count = 0;
-	sim->is_thread_created = false;
+	sim->is_monitor_created = false;
 	if (pthread_mutex_init(&sim->stop_mutex, NULL))
 		return (false);
 	if (pthread_mutex_init(&sim->finish_mutex, NULL))

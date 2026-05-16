@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 16:19:29 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 16:26:00 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 16:35:41 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ bool	start_threads(t_sim *sim)
 	}
 	if (pthread_create(&sim->monitor_thread, NULL, monitor_routine, sim) != 0)
 		return (false);
-	sim->is_thread_created = true;
+	sim->is_monitor_created = true;
 	return (true);
 }
 
@@ -42,6 +42,6 @@ void	join_threads(t_sim *sim)
 			pthread_join(sim->coders[i].thread, NULL);
 		i++;
 	}
-	if (sim->is_thread_created)
+	if (sim->is_monitor_created)
 		pthread_join(sim->monitor_thread, NULL);
 }

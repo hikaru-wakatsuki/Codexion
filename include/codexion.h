@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 16:26:52 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/16 16:35:41 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ typedef struct s_sim
 	pthread_mutex_t		finish_mutex;
 	pthread_mutex_t		log_mutex;
 	pthread_t			monitor_thread;
-	bool				is_thread_created;
+	bool				is_monitor_created;
 	t_coder				*coders;
 	t_dongle			*dongles;
 }						t_sim;
