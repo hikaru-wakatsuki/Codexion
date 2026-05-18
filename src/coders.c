@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 12:26:38 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/07 14:10:50 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 13:45:23 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	is_finished(t_coder *coder)
 	return (false);
 }
 
-static bool	check_finish(t_coder *coder)
+static bool	increment_if_finished(t_coder *coder)
 {
 	t_sim	*sim;
 
@@ -57,7 +57,7 @@ static bool	check_finish(t_coder *coder)
 	return (false);
 }
 
-static void	do_rest(t_coder *coder)
+static void	do_debug_and_refactor(t_coder *coder)
 {
 	t_sim	*sim;
 
@@ -75,26 +75,19 @@ static void	do_rest(t_coder *coder)
 void	*coder_routine(void *arg)
 {
 	t_coder	*coder;
-	t_sim	*sim;
 
 	coder = (t_coder *)arg;
-	sim = coder->sim;
-	while (!is_stopped(sim))
+	while (!is_stopped(coder->sim))
 	{
 		if (!take_dongles(coder))
 			break ;
-		if (is_stopped(sim))
-		{
-			release_dongles(coder);
-			break ;
-		}
 		do_compile(coder);
 		release_dongles(coder);
-		if (is_stopped(sim))
+		if (is_stopped(coder->sim))
 			break ;
-		if (check_finish(coder))
+		if (increment_if_finished(coder))
 			break ;
-		do_rest(coder);
+		do_debug_and_refactor(coder);
 	}
 	return (NULL);
 }

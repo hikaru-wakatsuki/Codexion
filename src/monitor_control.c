@@ -6,18 +6,11 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/14 09:09:47 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 13:51:46 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
-
-void	print_log(t_sim *sim, int id, char *msg)
-{
-	pthread_mutex_lock(&sim->log_mutex);
-	printf("%ld %d %s\n", timestamp_ms(sim), id, msg);
-	pthread_mutex_unlock(&sim->log_mutex);
-}
 
 static void	broadcast_dongles(t_sim *sim)
 {

@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 16:35:41 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:01:55 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,16 @@ bool	init_sim(t_sim *sim)
 	if (!init_dongles(sim))
 		return (false);
 	return (true);
+}
+
+bool	is_stopped(t_sim *sim)
+{
+	bool	ret;
+
+	pthread_mutex_lock(&sim->stop_mutex);
+	ret = sim->stop_simulation;
+	pthread_mutex_unlock(&sim->stop_mutex);
+	return (ret);
 }
 
 void	cleanup_sim(t_sim *sim)

@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 19:01:35 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/04/27 23:08:04 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:01:42 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,19 +20,11 @@ long	get_time_ms(void)
 	return (tv.tv_sec * 1000L + tv.tv_usec / 1000L);
 }
 
-long	timestamp_ms(t_sim *sim)
+void	print_log(t_sim *sim, int id, char *msg)
 {
-	return (get_time_ms() - sim->start_ms);
-}
-
-bool	is_stopped(t_sim *sim)
-{
-	bool	ret;
-
-	pthread_mutex_lock(&sim->stop_mutex);
-	ret = sim->stop_simulation;
-	pthread_mutex_unlock(&sim->stop_mutex);
-	return (ret);
+	pthread_mutex_lock(&sim->log_mutex);
+	printf("%ld %d %s\n", get_time_ms() - sim->start_ms, id, msg);
+	pthread_mutex_unlock(&sim->log_mutex);
 }
 
 void	smart_sleep(long ms, t_sim *sim)

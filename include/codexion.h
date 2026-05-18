@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 16:35:41 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:02:21 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <string.h>
 # include <sys/time.h>
 # include <unistd.h>
+
+# define MAX_CODERS 1000
 
 typedef struct s_sim	t_sim;
 
@@ -101,7 +103,6 @@ bool					take_dongles(t_coder *coder);
 // main.c
 int						main(int argc, char *argv[]);
 // monitor_control.c
-void					print_log(t_sim *sim, int id, char *msg);
 void					*monitor_routine(void *arg);
 // parse_args.c
 bool					parse_args(int argc, char *argv[], t_sim *sim);
@@ -113,13 +114,13 @@ t_request				pop_request(t_heap *heap, t_sim *sim);
 bool					remove_request(t_heap *heap, int coder_id, t_sim *sim);
 // sim_control.c
 bool					init_sim(t_sim *sim);
+bool					is_stopped(t_sim *sim);
 void					cleanup_sim(t_sim *sim);
 // threads_control.c
 bool					start_threads(t_sim *sim);
 void					join_threads(t_sim *sim);
 // time.c
 long					get_time_ms(void);
-long					timestamp_ms(t_sim *sim);
-bool					is_stopped(t_sim *sim);
+void					print_log(t_sim *sim, int id, char *msg);
 void					smart_sleep(long ms, t_sim *sim);
 #endif
