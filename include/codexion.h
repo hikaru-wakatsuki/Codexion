@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 16:36:01 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:40:29 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,11 +100,8 @@ void					release_dongle(t_coder *coder, t_dongle *dongle);
 void					release_dongles(t_coder *coder);
 // dongles_take.c
 bool					take_dongles(t_coder *coder);
-// heap_util.c
 bool					is_higher_priority(t_request a, t_request b,
 							t_sim *sim);
-void					shift_up(t_heap *heap, int idx, t_sim *sim);
-void					shift_down(t_heap *heap, int idx, t_sim *sim);
 // heap.c
 bool					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);

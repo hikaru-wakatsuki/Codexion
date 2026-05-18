@@ -6,7 +6,7 @@
 #    By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/04/24 22:55:27 by hwakatsu          #+#    #+#              #
-#    Updated: 2026/05/18 16:18:45 by hwakatsu         ###   ########.fr        #
+#    Updated: 2026/05/18 16:40:39 by hwakatsu         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,6 @@ DIR = src
 SRCS = 	coder_routine.c \
 		dongles_release.c \
 		dongles_take.c \
-		heap_util.c
 		heap.c \
 		main.c \
 		monitor_routine.c \

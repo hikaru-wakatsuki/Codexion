@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 16:28:24 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:39:23 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,15 @@ static bool	no_higher_priority(t_dongle *dongle, t_request *req, t_sim *sim)
 		i++;
 	}
 	return (true);
+}
+
+bool	is_higher_priority(t_request a, t_request b, t_sim *sim)
+{
+	if (sim->scheduler == FIFO)
+		return (a.arrival_seq < b.arrival_seq);
+	if (a.deadline_ms != b.deadline_ms)
+		return (a.deadline_ms < b.deadline_ms);
+	return (a.arrival_seq < b.arrival_seq);
 }
 
 static void	push_both_requests(t_coder *coder, t_request *req, int first,
