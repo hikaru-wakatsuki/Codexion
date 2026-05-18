@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 14:14:48 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:15:22 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static bool	no_higher_priority(t_dongle *dongle, t_request *req, t_sim *sim)
 			i++;
 			continue ;
 		}
-		if (is_a_higher_priority(dongle->wait_queue.data[i], *req, sim))
+		if (is_higher_priority(dongle->wait_queue.data[i], *req, sim))
 			return (false);
 		i++;
 	}
