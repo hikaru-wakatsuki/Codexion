@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 14:02:21 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:11:42 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ typedef struct s_sim
 	t_dongle			*dongles;
 }						t_sim;
 
-// coders.c
+// coder_routine.c
 bool					is_finished(t_coder *coder);
 void					*coder_routine(void *arg);
 // dongles_release.c
@@ -100,18 +100,18 @@ void					release_dongle(t_coder *coder, t_dongle *dongle);
 void					release_dongles(t_coder *coder);
 // dongles_take.c
 bool					take_dongles(t_coder *coder);
-// main.c
-int						main(int argc, char *argv[]);
-// monitor_control.c
-void					*monitor_routine(void *arg);
-// parse_args.c
-bool					parse_args(int argc, char *argv[], t_sim *sim);
-// request.c
+// heap.c
 bool					is_a_higher_priority(t_request a, t_request b,
 							t_sim *sim);
 void					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);
 bool					remove_request(t_heap *heap, int coder_id, t_sim *sim);
+// main.c
+int						main(int argc, char *argv[]);
+// monitor_routine.c
+void					*monitor_routine(void *arg);
+// parse_args.c
+bool					parse_args(int argc, char *argv[], t_sim *sim);
 // sim_control.c
 bool					init_sim(t_sim *sim);
 bool					is_stopped(t_sim *sim);

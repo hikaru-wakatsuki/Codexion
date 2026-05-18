@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/16 11:22:04 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:14:48 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,12 +110,6 @@ bool	take_dongles(t_coder *coder)
 	int			first;
 	int			second;
 
-	if (coder->sim->n_coders == 1)
-	{
-		while (!is_stopped(coder->sim))
-			usleep(500);
-		return (false);
-	}
 	set_order(&first, &second, coder);
 	req.coder_id = coder->id;
 	pthread_mutex_lock(&coder->state_mutex);

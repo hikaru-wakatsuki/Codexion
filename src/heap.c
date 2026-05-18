@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/15 16:39:01 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:06:10 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,62 +30,51 @@ static void	swap(t_request *a, t_request *b)
 	*b = tmp;
 }
 
-void	push_request(t_heap *heap, t_request req, t_sim *sim)
-{
-	int	i;
-	int	parent;
-
-	if (heap->size == heap->capacity)
-		return ;
-	i = heap->size;
-	heap->data[i] = req;
-	heap->size++;
-	while (i > 0)
-	{
-		parent = (i - 1) / 2;
-		if (!is_a_higher_priority(heap->data[i], heap->data[parent], sim))
-			break ;
-		swap(&heap->data[i], &heap->data[parent]);
-		i = parent;
-	}
-}
-
-static void	shift_up(t_heap *heap, int i, t_sim *sim)
+static void	shift_up(t_heap *heap, int idx, t_sim *sim)
 {
 	int	parent;
 
-	while (i > 0)
+	while (idx > 0)
 	{
-		parent = (i - 1) / 2;
-		if (!is_a_higher_priority(heap->data[i], heap->data[parent], sim))
+		parent = (idx - 1) / 2;
+		if (!is_a_higher_priority(heap->data[idx], heap->data[parent], sim))
 			break ;
-		swap(&heap->data[i], &heap->data[parent]);
-		i = parent;
+		swap(&heap->data[idx], &heap->data[parent]);
+		idx = parent;
 	}
 }
 
-static void	shift_down(t_heap *heap, int i, t_sim *sim)
+static void	shift_down(t_heap *heap, int idx, t_sim *sim)
 {
 	int			left;
 	int			right;
-	int			smallest;
+	int			highest_idx;
 
 	while (true)
 	{
-		left = 2 * i + 1;
-		right = 2 * i + 2;
-		smallest = i;
+		left = 2 * idx + 1;
+		right = 2 * idx + 2;
+		highest_idx = idx;
 		if (left < heap->size && is_a_higher_priority(heap->data[left],
-				heap->data[smallest], sim))
-			smallest = left;
+				heap->data[highest_idx], sim))
+			highest_idx = left;
 		if (right < heap->size && is_a_higher_priority(heap->data[right],
-				heap->data[smallest], sim))
-			smallest = right;
-		if (smallest == i)
+				heap->data[highest_idx], sim))
+			highest_idx = right;
+		if (highest_idx == idx)
 			break ;
-		swap(&heap->data[i], &heap->data[smallest]);
-		i = smallest;
+		swap(&heap->data[idx], &heap->data[highest_idx]);
+		idx = highest_idx;
 	}
+}
+
+void	push_request(t_heap *heap, t_request req, t_sim *sim)
+{
+	if (heap->size == heap->capacity)
+		return ;
+	heap->data[heap->size] = req;
+	heap->size++;
+	shift_up(heap, heap->size - 1, sim);
 }
 
 t_request	pop_request(t_heap *heap, t_sim *sim)
@@ -114,7 +103,7 @@ bool	remove_request(t_heap *heap, int coder_id, t_sim *sim)
 			heap->size--;
 			if (i < heap->size)
 			{
-				shift_up(heap, i , sim);
+				shift_up(heap, i, sim);
 				shift_down(heap, i, sim);
 			}
 			return (true);

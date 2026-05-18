@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   coders.c                                           :+:      :+:    :+:   */
+/*   coder_routine.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 12:26:38 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 13:45:23 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 14:13:36 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,15 +75,22 @@ static void	do_debug_and_refactor(t_coder *coder)
 void	*coder_routine(void *arg)
 {
 	t_coder	*coder;
+	t_sim	*sim;
 
 	coder = (t_coder *)arg;
-	while (!is_stopped(coder->sim))
+	sim = coder->sim;
+	if (sim->n_coders == 1)
+	{
+		smart_sleep(sim->time_to_burnout, sim);
+		return (NULL);
+	}
+	while (!is_stopped(sim))
 	{
 		if (!take_dongles(coder))
 			break ;
 		do_compile(coder);
 		release_dongles(coder);
-		if (is_stopped(coder->sim))
+		if (is_stopped(sim))
 			break ;
 		if (increment_if_finished(coder))
 			break ;
