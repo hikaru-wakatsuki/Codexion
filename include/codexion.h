@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 16:17:36 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:36:01 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,9 +106,8 @@ bool					is_higher_priority(t_request a, t_request b,
 void					shift_up(t_heap *heap, int idx, t_sim *sim);
 void					shift_down(t_heap *heap, int idx, t_sim *sim);
 // heap.c
-void					push_request(t_heap *heap, t_request req, t_sim *sim);
+bool					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);
-bool					remove_request(t_heap *heap, int coder_id, t_sim *sim);
 // main.c
 int						main(int argc, char *argv[]);
 // monitor_routine.c

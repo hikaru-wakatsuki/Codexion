@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 16:15:22 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:28:24 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,18 +55,6 @@ static void	push_both_requests(t_coder *coder, t_request *req, int first,
 	pthread_mutex_lock(&coder->sim->dongles[second].mutex);
 	req->arrival_seq = coder->sim->dongles[second].local_seq++;
 	push_request(&coder->sim->dongles[second].wait_queue, *req, coder->sim);
-	pthread_mutex_unlock(&coder->sim->dongles[second].mutex);
-}
-
-static void	remove_both_requests(t_coder *coder, int first, int second)
-{
-	pthread_mutex_lock(&coder->sim->dongles[first].mutex);
-	remove_request(&coder->sim->dongles[first].wait_queue, coder->id,
-		coder->sim);
-	pthread_mutex_unlock(&coder->sim->dongles[first].mutex);
-	pthread_mutex_lock(&coder->sim->dongles[second].mutex);
-	remove_request(&coder->sim->dongles[second].wait_queue, coder->id,
-		coder->sim);
 	pthread_mutex_unlock(&coder->sim->dongles[second].mutex);
 }
 
@@ -123,6 +111,5 @@ bool	take_dongles(t_coder *coder)
 			return (true);
 		usleep(500);
 	}
-	remove_both_requests(coder, first, second);
 	return (false);
 }
