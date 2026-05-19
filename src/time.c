@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 19:01:35 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 14:01:42 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:13:44 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ void	smart_sleep(long ms, t_sim *sim)
 	{
 		if (get_time_ms() - start >= ms)
 			break ;
-		usleep(500);
+		usleep(100);
 	}
 }
