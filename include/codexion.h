@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 09:27:23 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 14:38:40 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void					cleanup_sim(t_sim *sim);
 // threads_control.c
 bool					start_threads(t_sim *sim);
 void					join_threads(t_sim *sim);
-// time.c
+// utils.c
 long					get_time_ms(void);
 void					print_log(t_sim *sim, int id, char *msg);
 void					smart_sleep(long ms, t_sim *sim);
