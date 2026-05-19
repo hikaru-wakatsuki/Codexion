@@ -6,13 +6,13 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 16:39:57 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/18 16:41:46 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-static void	swap(t_request *a, t_request *b)
+static void	swap_request(t_request *a, t_request *b)
 {
 	t_request	tmp;
 
@@ -30,7 +30,7 @@ static void	shift_up(t_heap *heap, int idx, t_sim *sim)
 		parent = (idx - 1) / 2;
 		if (!is_higher_priority(heap->data[idx], heap->data[parent], sim))
 			break ;
-		swap(&heap->data[idx], &heap->data[parent]);
+		swap_request(&heap->data[idx], &heap->data[parent]);
 		idx = parent;
 	}
 }
@@ -54,7 +54,7 @@ static void	shift_down(t_heap *heap, int idx, t_sim *sim)
 			highest_idx = right;
 		if (highest_idx == idx)
 			break ;
-		swap(&heap->data[idx], &heap->data[highest_idx]);
+		swap_request(&heap->data[idx], &heap->data[highest_idx]);
 		idx = highest_idx;
 	}
 }

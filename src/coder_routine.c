@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 12:26:38 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 14:13:36 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 08:33:50 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,8 @@ void	*coder_routine(void *arg)
 		if (!take_dongles(coder))
 			break ;
 		do_compile(coder);
-		release_dongles(coder);
+		release_dongle(coder, &sim->dongles[coder->left_dongle_idx]);
+		release_dongle(coder, &sim->dongles[coder->right_dongle_idx]);
 		if (is_stopped(sim))
 			break ;
 		if (increment_if_finished(coder))

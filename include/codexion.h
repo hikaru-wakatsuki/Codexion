@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/18 16:40:29 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 08:52:40 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,6 @@ typedef struct s_dongle
 	long				cooldown_until_ms;
 	long				local_seq;
 	pthread_mutex_t		mutex;
-	pthread_cond_t		cond;
 	t_heap				wait_queue;
 }						t_dongle;
 
@@ -95,13 +94,14 @@ typedef struct s_sim
 // coder_routine.c
 bool					is_finished(t_coder *coder);
 void					*coder_routine(void *arg);
-// dongles_release.c
-void					release_dongle(t_coder *coder, t_dongle *dongle);
-void					release_dongles(t_coder *coder);
-// dongles_take.c
-bool					take_dongles(t_coder *coder);
+// dongles_utils.c
 bool					is_higher_priority(t_request a, t_request b,
 							t_sim *sim);
+bool					try_take_dongles(t_coder *coder, t_dongle *first_d,
+							t_dongle *second_d, t_request *req);
+// dongles.c
+bool					take_dongles(t_coder *coder);
+void					release_dongle(t_coder *coder, t_dongle *dongle);
 // heap.c
 bool					push_request(t_heap *heap, t_request req, t_sim *sim);
 t_request				pop_request(t_heap *heap, t_sim *sim);
