@@ -6,23 +6,26 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 08:48:42 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:26:27 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/codexion.h"
 
-static void	set_order(int *first, int *second, t_coder *coder)
+static void	set_order(t_dongle **first, t_dongle **second, t_coder *coder)
 {
+	t_sim	*sim;
+
+	sim = coder->sim;
 	if (coder->left_dongle_idx < coder->right_dongle_idx)
 	{
-		*first = coder->left_dongle_idx;
-		*second = coder->right_dongle_idx;
+		*first = &sim->dongles[coder->left_dongle_idx];
+		*second = &sim->dongles[coder->right_dongle_idx];
 	}
 	else
 	{
-		*first = coder->right_dongle_idx;
-		*second = coder->left_dongle_idx;
+		*first = &sim->dongles[coder->right_dongle_idx];
+		*second = &sim->dongles[coder->left_dongle_idx];
 	}
 }
 
@@ -39,46 +42,41 @@ static t_request	create_request(t_coder *coder)
 	return (req);
 }
 
-static bool	push_requests(t_coder *coder, t_request *req, int first, int second)
+static bool	push_requests(t_coder *coder, t_request *req, t_dongle *first,
+		t_dongle *second)
 {
-	t_sim	*sim;
-
-	sim = coder->sim;
-	pthread_mutex_lock(&sim->dongles[first].mutex);
-	req->arrival_seq = sim->dongles[first].local_seq++;
-	if (!push_request(&sim->dongles[first].wait_queue, *req, sim))
+	pthread_mutex_lock(&first->mutex);
+	req->arrival_seq = first->local_seq++;
+	if (!push_request(&first->wait_queue, *req, coder->sim))
 	{
-		pthread_mutex_unlock(&sim->dongles[first].mutex);
+		pthread_mutex_unlock(&first->mutex);
 		return (false);
 	}
-	pthread_mutex_unlock(&sim->dongles[first].mutex);
-	pthread_mutex_lock(&sim->dongles[second].mutex);
-	req->arrival_seq = sim->dongles[second].local_seq++;
-	if (!push_request(&sim->dongles[second].wait_queue, *req, sim))
+	pthread_mutex_unlock(&first->mutex);
+	pthread_mutex_lock(&second->mutex);
+	req->arrival_seq = second->local_seq++;
+	if (!push_request(&second->wait_queue, *req, coder->sim))
 	{
-		pthread_mutex_unlock(&sim->dongles[second].mutex);
+		pthread_mutex_unlock(&second->mutex);
 		return (false);
 	}
-	pthread_mutex_unlock(&sim->dongles[second].mutex);
+	pthread_mutex_unlock(&second->mutex);
 	return (true);
 }
 
 bool	take_dongles(t_coder *coder)
 {
 	t_request	req;
-	int			first;
-	int			second;
-	t_sim		*sim;
+	t_dongle	*first;
+	t_dongle	*second;
 
-	sim = coder->sim;
 	set_order(&first, &second, coder);
 	req = create_request(coder);
 	if (!push_requests(coder, &req, first, second))
 		return (false);
-	while (!is_stopped(sim))
+	while (!is_stopped(coder->sim))
 	{
-		if (try_take_dongles(coder, &sim->dongles[first], &sim->dongles[second],
-				&req))
+		if (try_take_dongles(coder, first, second, &req))
 			return (true);
 		usleep(500);
 	}

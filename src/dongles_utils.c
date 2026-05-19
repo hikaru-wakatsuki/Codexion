@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 08:48:56 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:27:01 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,29 +46,29 @@ static bool	can_take(t_dongle *dongle, t_request *req, long now, t_sim *sim)
 		&& now >= dongle->cooldown_until_ms);
 }
 
-bool	try_take_dongles(t_coder *coder, t_dongle *first_d,
-		t_dongle *second_d, t_request *req)
+bool	try_take_dongles(t_coder *coder, t_dongle *first,
+		t_dongle *second, t_request *req)
 {
 	t_sim	*sim;
 	long	now;
 
 	sim = coder->sim;
 	now = get_time_ms();
-	pthread_mutex_lock(&first_d->mutex);
-	pthread_mutex_lock(&second_d->mutex);
-	if (can_take(first_d, req, now, sim) && can_take(second_d, req, now, sim))
+	pthread_mutex_lock(&first->mutex);
+	pthread_mutex_lock(&second->mutex);
+	if (can_take(first, req, now, sim) && can_take(second, req, now, sim))
 	{
-		pop_request(&first_d->wait_queue, sim);
-		pop_request(&second_d->wait_queue, sim);
-		first_d->owner_coder_id = coder->id;
-		second_d->owner_coder_id = coder->id;
-		pthread_mutex_unlock(&second_d->mutex);
-		pthread_mutex_unlock(&first_d->mutex);
+		pop_request(&first->wait_queue, sim);
+		pop_request(&second->wait_queue, sim);
+		first->owner_coder_id = coder->id;
+		second->owner_coder_id = coder->id;
+		pthread_mutex_unlock(&second->mutex);
+		pthread_mutex_unlock(&first->mutex);
 		print_log(sim, coder->id, "has taken a dongle");
 		print_log(sim, coder->id, "has taken a dongle");
 		return (true);
 	}
-	pthread_mutex_unlock(&second_d->mutex);
-	pthread_mutex_unlock(&first_d->mutex);
+	pthread_mutex_unlock(&second->mutex);
+	pthread_mutex_unlock(&first->mutex);
 	return (false);
 }

@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 08:52:40 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:27:23 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,8 +97,8 @@ void					*coder_routine(void *arg);
 // dongles_utils.c
 bool					is_higher_priority(t_request a, t_request b,
 							t_sim *sim);
-bool					try_take_dongles(t_coder *coder, t_dongle *first_d,
-							t_dongle *second_d, t_request *req);
+bool					try_take_dongles(t_coder *coder, t_dongle *first,
+							t_dongle *second, t_request *req);
 // dongles.c
 bool					take_dongles(t_coder *coder);
 void					release_dongle(t_coder *coder, t_dongle *dongle);
