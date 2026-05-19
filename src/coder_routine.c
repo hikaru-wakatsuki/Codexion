@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 12:26:38 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 08:33:50 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:31:48 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ bool	is_finished(t_coder *coder)
 	return (false);
 }
 
-static bool	increment_if_finished(t_coder *coder)
+static bool	increment_finished(t_coder *coder)
 {
 	t_sim	*sim;
 
@@ -93,7 +93,7 @@ void	*coder_routine(void *arg)
 		release_dongle(coder, &sim->dongles[coder->right_dongle_idx]);
 		if (is_stopped(sim))
 			break ;
-		if (increment_if_finished(coder))
+		if (increment_finished(coder))
 			break ;
 		do_debug_and_refactor(coder);
 	}

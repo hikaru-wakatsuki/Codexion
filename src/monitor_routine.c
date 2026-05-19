@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 09:02:11 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 14:11:29 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static bool	check_burnout(t_sim *sim)
 static bool	check_all_finished(t_sim *sim)
 {
 	bool	all_finished;
-	bool	should_stop;
 
 	if (sim->must_compile_count <= 0)
 		return (false);
@@ -60,8 +59,7 @@ static bool	check_all_finished(t_sim *sim)
 	if (all_finished)
 	{
 		pthread_mutex_lock(&sim->stop_mutex);
-		should_stop = !sim->stop_simulation;
-		if (should_stop)
+		if (!sim->stop_simulation)
 			sim->stop_simulation = true;
 		pthread_mutex_unlock(&sim->stop_mutex);
 		return (true);
