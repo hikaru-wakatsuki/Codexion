@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 08:57:12 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:02:11 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ static void	handle_burnout(t_sim *sim, int id)
 	{
 		sim->stop_simulation = true;
 		pthread_mutex_unlock(&sim->stop_mutex);
-		broadcast_dongles(sim);
 		print_log(sim, id, "burned out");
 	}
 	else
@@ -65,8 +64,6 @@ static bool	check_all_finished(t_sim *sim)
 		if (should_stop)
 			sim->stop_simulation = true;
 		pthread_mutex_unlock(&sim->stop_mutex);
-		if (should_stop)
-			broadcast_dongles(sim);
 		return (true);
 	}
 	return (false);

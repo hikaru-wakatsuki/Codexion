@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 21:09:06 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 09:00:00 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/19 09:02:54 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static bool	init_dongles(t_sim *sim)
 		sim->dongles[i].wait_queue.size = 0;
 		sim->dongles[i].wait_queue.capacity = 2;
 		sim->dongles[i].wait_queue.data
-			= (t_request *)malloc(sizeof(t_request) * sim->n_coders);
+			= (t_request *)malloc(sizeof(t_request) * 2);
 		if (!sim->dongles[i].wait_queue.data)
 			return (false);
 		i++;
