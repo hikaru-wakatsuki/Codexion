@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 14:38:40 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 05:42:44 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,12 @@ typedef struct s_sim
 	t_dongle			*dongles;
 }						t_sim;
 
+typedef struct s_req_pair
+{
+	t_request			first;
+	t_request			second;
+}						t_req_pair;
+
 // coder_routine.c
 bool					is_finished(t_coder *coder);
 void					*coder_routine(void *arg);
@@ -98,7 +104,7 @@ void					*coder_routine(void *arg);
 bool					is_higher_priority(t_request a, t_request b,
 							t_sim *sim);
 bool					try_take_dongles(t_coder *coder, t_dongle *first,
-							t_dongle *second, t_request *req);
+							t_dongle *second, t_req_pair *reqs);
 // dongles.c
 bool					take_dongles(t_coder *coder);
 void					release_dongle(t_coder *coder, t_dongle *dongle);

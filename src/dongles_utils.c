@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 09:27:01 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 06:00:10 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static bool	can_take(t_dongle *dongle, t_request *req, long now, t_sim *sim)
 }
 
 bool	try_take_dongles(t_coder *coder, t_dongle *first,
-		t_dongle *second, t_request *req)
+		t_dongle *second, t_req_pair *reqs)
 {
 	t_sim	*sim;
 	long	now;
@@ -56,8 +56,26 @@ bool	try_take_dongles(t_coder *coder, t_dongle *first,
 	now = get_time_ms();
 	pthread_mutex_lock(&first->mutex);
 	pthread_mutex_lock(&second->mutex);
-	if (can_take(first, req, now, sim) && can_take(second, req, now, sim))
+	if (can_take(first, &reqs->first, now, sim)
+		&& can_take(second, &reqs->second, now, sim))
 	{
+		//
+		int d = 0;
+		int i;
+		while (d < sim->n_coders)
+		{
+			printf("dongle[%d] size=%d: ", d, sim->dongles[d].wait_queue.size);
+			i = 0;
+			while (i < sim->dongles[d].wait_queue.size)
+			{
+				printf("c%d(s=%ld) ", sim->dongles[d].wait_queue.data[i].coder_id,
+					sim->dongles[d].wait_queue.data[i].arrival_seq);
+				i++;
+			}
+			printf("\n");
+			d++;
+		}
+		//
 		pop_request(&first->wait_queue, sim);
 		pop_request(&second->wait_queue, sim);
 		first->owner_coder_id = coder->id;

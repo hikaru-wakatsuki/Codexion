@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 09:26:27 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 05:36:39 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,20 @@ static t_request	create_request(t_coder *coder)
 	return (req);
 }
 
-static bool	push_requests(t_coder *coder, t_request *req, t_dongle *first,
+static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *first,
 		t_dongle *second)
 {
 	pthread_mutex_lock(&first->mutex);
-	req->arrival_seq = first->local_seq++;
-	if (!push_request(&first->wait_queue, *req, coder->sim))
+	reqs->first.arrival_seq = first->local_seq++;
+	if (!push_request(&first->wait_queue, reqs->first, coder->sim))
 	{
 		pthread_mutex_unlock(&first->mutex);
 		return (false);
 	}
 	pthread_mutex_unlock(&first->mutex);
 	pthread_mutex_lock(&second->mutex);
-	req->arrival_seq = second->local_seq++;
-	if (!push_request(&second->wait_queue, *req, coder->sim))
+	reqs->second.arrival_seq = second->local_seq++;
+	if (!push_request(&second->wait_queue, reqs->second, coder->sim))
 	{
 		pthread_mutex_unlock(&second->mutex);
 		return (false);
@@ -66,17 +66,18 @@ static bool	push_requests(t_coder *coder, t_request *req, t_dongle *first,
 
 bool	take_dongles(t_coder *coder)
 {
-	t_request	req;
+	t_req_pair	reqs;
 	t_dongle	*first;
 	t_dongle	*second;
 
 	set_order(&first, &second, coder);
-	req = create_request(coder);
-	if (!push_requests(coder, &req, first, second))
+	reqs.first = create_request(coder);
+	reqs.second = create_request(coder);
+	if (!push_requests(coder, &reqs, first, second))
 		return (false);
 	while (!is_stopped(coder->sim))
 	{
-		if (try_take_dongles(coder, first, second, &req))
+		if (try_take_dongles(coder, first, second, &reqs))
 			return (true);
 		usleep(500);
 	}
