@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 19:01:35 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/20 01:03:57 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 13:35:11 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,7 @@ long	get_time_ms(void)
 void	print_log(t_sim *sim, int id, char *msg)
 {
 	pthread_mutex_lock(&sim->log_mutex);
-	//printf("%ld %d %s\n", get_time_ms() - sim->start_ms, id, msg);
-	long now = get_time_ms();
-	printf("%ld %d %s %ld\n",now - sim->start_ms, id, msg, now - sim->coders[id - 1].last_compile_start_ms);
+	printf("%ld %d %s\n", get_time_ms() - sim->start_ms, id, msg);
 	pthread_mutex_unlock(&sim->log_mutex);
 }
 

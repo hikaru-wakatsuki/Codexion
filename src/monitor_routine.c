@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/19 14:11:29 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 13:21:49 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,13 @@ void	*monitor_routine(void *arg)
 	t_sim	*sim;
 
 	sim = (t_sim *)arg;
+	if (sim->must_compile_count == 0)
+	{
+		pthread_mutex_lock(&sim->stop_mutex);
+		sim->stop_simulation = true;
+		pthread_mutex_unlock(&sim->stop_mutex);
+		return (NULL);
+	}
 	while (!is_stopped(sim))
 	{
 		if (check_all_finished(sim))

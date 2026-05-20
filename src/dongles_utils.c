@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/20 06:00:10 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 13:31:43 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,33 +21,43 @@ bool	is_higher_priority(t_request a, t_request b, t_sim *sim)
 	return (a.arrival_seq < b.arrival_seq);
 }
 
-static bool	no_higher_priority(t_dongle *dongle, t_request *req, t_sim *sim)
+static bool	no_higher_priority(t_dongle *dongle, t_dongle *neighbor,
+		t_request *req, t_sim *sim)
 {
 	int	i;
+	int	j;
 
 	i = 0;
 	while (i < dongle->wait_queue.size)
 	{
-		if (dongle->wait_queue.data[i].coder_id == req->coder_id)
+		if (dongle->wait_queue.data[i].coder_id != req->coder_id
+			&& is_higher_priority(dongle->wait_queue.data[i], *req, sim))
 		{
-			i++;
-			continue ;
+			j = 0;
+			while (j < neighbor->wait_queue.size)
+			{
+				if (neighbor->wait_queue.data[j].coder_id
+					== dongle->wait_queue.data[i].coder_id)
+					return (false);
+				j++;
+			}
 		}
-		if (is_higher_priority(dongle->wait_queue.data[i], *req, sim))
-			return (false);
 		i++;
 	}
 	return (true);
 }
 
-static bool	can_take(t_dongle *dongle, t_request *req, long now, t_sim *sim)
+static bool	can_take(t_dongle *first, t_dongle *second, t_req_pair *reqs,
+	t_sim *sim)
 {
-	return (no_higher_priority(dongle, req, sim) && dongle->owner_coder_id == -1
-		&& now >= dongle->cooldown_until_ms);
+	return (no_higher_priority(first, second, &reqs->first, sim)
+		&& no_higher_priority(second, first, &reqs->second, sim)
+		&& first->owner_coder_id == -1
+		&& second->owner_coder_id == -1);
 }
 
-bool	try_take_dongles(t_coder *coder, t_dongle *first,
-		t_dongle *second, t_req_pair *reqs)
+bool	try_take_dongles(t_coder *coder, t_dongle *first, t_dongle *second,
+		t_req_pair *reqs)
 {
 	t_sim	*sim;
 	long	now;
@@ -56,28 +66,12 @@ bool	try_take_dongles(t_coder *coder, t_dongle *first,
 	now = get_time_ms();
 	pthread_mutex_lock(&first->mutex);
 	pthread_mutex_lock(&second->mutex);
-	if (can_take(first, &reqs->first, now, sim)
-		&& can_take(second, &reqs->second, now, sim))
+	if (can_take(first, second, reqs, sim)
+		&& now >= first->cooldown_until_ms
+		&& now >= second->cooldown_until_ms)
 	{
-		//
-		int d = 0;
-		int i;
-		while (d < sim->n_coders)
-		{
-			printf("dongle[%d] size=%d: ", d, sim->dongles[d].wait_queue.size);
-			i = 0;
-			while (i < sim->dongles[d].wait_queue.size)
-			{
-				printf("c%d(s=%ld) ", sim->dongles[d].wait_queue.data[i].coder_id,
-					sim->dongles[d].wait_queue.data[i].arrival_seq);
-				i++;
-			}
-			printf("\n");
-			d++;
-		}
-		//
-		pop_request(&first->wait_queue, sim);
-		pop_request(&second->wait_queue, sim);
+		remove_request(&first->wait_queue, reqs->first, sim);
+		remove_request(&second->wait_queue, reqs->second, sim);
 		first->owner_coder_id = coder->id;
 		second->owner_coder_id = coder->id;
 		pthread_mutex_unlock(&second->mutex);

@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/20 05:36:39 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/20 13:16:54 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,6 @@ void	release_dongle(t_coder *coder, t_dongle *dongle)
 		dongle->owner_coder_id = -1;
 		dongle->cooldown_until_ms = get_time_ms() + coder->sim->dongle_cooldown;
 		pthread_mutex_unlock(&dongle->mutex);
-		print_log(coder->sim, coder->id, "released a dongle");
 		return ;
 	}
 	pthread_mutex_unlock(&dongle->mutex);
