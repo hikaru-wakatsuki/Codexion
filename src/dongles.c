@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/21 15:07:51 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/21 16:11:53 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,10 @@ static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *first,
 		t_dongle *second)
 {
 	pthread_mutex_lock(&first->mutex);
-	reqs->first.arrival_seq = first->local_seq++;
+	if (first->local_seq == 0)
+		reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+	else
+		reqs->first.arrival_seq = first->local_seq++;
 	if (!push_request(&first->wait_queue, reqs->first, coder->sim))
 	{
 		pthread_mutex_unlock(&first->mutex);
@@ -54,7 +57,10 @@ static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *first,
 	}
 	pthread_mutex_unlock(&first->mutex);
 	pthread_mutex_lock(&second->mutex);
-	reqs->second.arrival_seq = second->local_seq++;
+	if (second->local_seq == 0)
+		reqs->second.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+	else
+		reqs->second.arrival_seq = second->local_seq++;
 	if (!push_request(&second->wait_queue, reqs->second, coder->sim))
 	{
 		pthread_mutex_unlock(&second->mutex);

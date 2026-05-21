@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/21 15:13:08 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/21 15:56:24 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,20 +35,23 @@ static bool	no_higher_priority(t_dongle *dongle, t_dongle *neighbor,
 	int	j;
 
 	i = 0;
+	(void)j;
+	(void)neighbor;
 	while (i < dongle->wait_queue.size)
 	{
 		if (dongle->wait_queue.data[i].coder_id != req->coder_id
 			&& is_higher_priority(dongle->wait_queue.data[i], *req, sim))
-		{
-			j = 0;
-			while (j < neighbor->wait_queue.size)
-			{
-				if (neighbor->wait_queue.data[j].coder_id
-					== dongle->wait_queue.data[i].coder_id)
-					return (false);
-				j++;
-			}
-		}
+			return (false);
+		//{
+		//	j = 0;
+		//	while (j < neighbor->wait_queue.size)
+		//	{
+		//		if (neighbor->wait_queue.data[j].coder_id
+		//			== dongle->wait_queue.data[i].coder_id)
+		//			return (false);
+		//		j++;
+		//	}
+		//}
 		i++;
 	}
 	return (true);
