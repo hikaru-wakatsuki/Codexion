@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/22 16:20:51 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:44:57 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,28 +42,25 @@ static t_request	create_request(t_coder *coder)
 	return (req);
 }
 
-static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *dongle)
+static bool	push_requests(t_coder *coder, t_request *req, t_dongle *dongle)
 {
 	pthread_mutex_lock(&dongle->mutex);
-	if (dongle->local_seq == 0)
+	if (dongle->local_seq <= 1)
 	{
 		if (coder->sim->n_coders % 2 == 1 && dongle->id == 0)
-			reqs->first.arrival_seq = dongle->local_seq;
+			req->arrival_seq = dongle->local_seq;
+		else if (coder->id % 2 == 1)
+			req->arrival_seq = 0;
 		else
-			reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
-		dongle->local_seq = 1;
-	}
-	else if (dongle->local_seq == 1)
-	{
-		if (coder->sim->n_coders % 2 == 1 && dongle->id == 0)
-			reqs->first.arrival_seq = dongle->local_seq;
+			req->arrival_seq = 1;
+		if (dongle->local_seq == 0)
+			dongle->local_seq = 1;
 		else
-			reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
-		dongle->local_seq = 2;
+			dongle->local_seq = 2;
 	}
 	else
-		reqs->first.arrival_seq = dongle->local_seq++;
-	if (!push_request(&dongle->wait_queue, reqs->first, coder->sim))
+		req->arrival_seq = dongle->local_seq++;
+	if (!push_request(&dongle->wait_queue, *req, coder->sim))
 	{
 		pthread_mutex_unlock(&dongle->mutex);
 		return (false);
@@ -81,9 +78,9 @@ bool	take_dongles(t_coder *coder)
 	set_order(&first, &second, coder);
 	reqs.first = create_request(coder);
 	reqs.second = create_request(coder);
-	if (!push_requests(coder, &reqs, first))
+	if (!push_requests(coder, &reqs.first, first))
 		return (false);
-	if (!push_requests(coder, &reqs, second))
+	if (!push_requests(coder, &reqs.second, second))
 		return (false);
 	while (!is_stopped(coder->sim))
 	{
