@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/21 16:16:20 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 11:26:50 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,19 @@ static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *first,
 	pthread_mutex_lock(&first->mutex);
 	if (first->local_seq == 0)
 	{
-		reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+		if (coder->sim->n_coders % 2 == 1 && first->id == coder->sim->n_coders - 1)
+			reqs->first.arrival_seq = first->local_seq;
+		else
+			reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+		first->local_seq = 1;
+	}
+	else if (first->local_seq == 1)
+	{
+		if (coder->sim->n_coders % 2 == 1 && first->id == coder->sim->n_coders - 1)
+			reqs->first.arrival_seq = first->local_seq;
+		else
+			reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+		first->local_seq = 2;
 	}
 	else
 		reqs->first.arrival_seq = first->local_seq++;
@@ -61,7 +73,19 @@ static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *first,
 	pthread_mutex_lock(&second->mutex);
 	if (second->local_seq == 0)
 	{
-		reqs->second.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+		if (coder->sim->n_coders % 2 == 1 && second->id == coder->sim->n_coders - 1)
+			reqs->second.arrival_seq = second->local_seq;
+		else
+			reqs->second.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+		second->local_seq = 1;
+	}
+	else if (second->local_seq == 1)
+	{
+		if (coder->sim->n_coders % 2 == 1 && second->id == coder->sim->n_coders - 1)
+			reqs->second.arrival_seq = second->local_seq;
+		else
+			reqs->second.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
+		second->local_seq = 2;
 	}
 	else
 		reqs->second.arrival_seq = second->local_seq++;
