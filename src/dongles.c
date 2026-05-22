@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/09 07:57:49 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/22 11:26:50 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:20:51 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,59 +42,33 @@ static t_request	create_request(t_coder *coder)
 	return (req);
 }
 
-static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *first,
-		t_dongle *second)
+static bool	push_requests(t_coder *coder, t_req_pair *reqs, t_dongle *dongle)
 {
-	pthread_mutex_lock(&first->mutex);
-	if (first->local_seq == 0)
+	pthread_mutex_lock(&dongle->mutex);
+	if (dongle->local_seq == 0)
 	{
-		if (coder->sim->n_coders % 2 == 1 && first->id == coder->sim->n_coders - 1)
-			reqs->first.arrival_seq = first->local_seq;
+		if (coder->sim->n_coders % 2 == 1 && dongle->id == 0)
+			reqs->first.arrival_seq = dongle->local_seq;
 		else
 			reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
-		first->local_seq = 1;
+		dongle->local_seq = 1;
 	}
-	else if (first->local_seq == 1)
+	else if (dongle->local_seq == 1)
 	{
-		if (coder->sim->n_coders % 2 == 1 && first->id == coder->sim->n_coders - 1)
-			reqs->first.arrival_seq = first->local_seq;
+		if (coder->sim->n_coders % 2 == 1 && dongle->id == 0)
+			reqs->first.arrival_seq = dongle->local_seq;
 		else
 			reqs->first.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
-		first->local_seq = 2;
+		dongle->local_seq = 2;
 	}
 	else
-		reqs->first.arrival_seq = first->local_seq++;
-	if (!push_request(&first->wait_queue, reqs->first, coder->sim))
+		reqs->first.arrival_seq = dongle->local_seq++;
+	if (!push_request(&dongle->wait_queue, reqs->first, coder->sim))
 	{
-		pthread_mutex_unlock(&first->mutex);
+		pthread_mutex_unlock(&dongle->mutex);
 		return (false);
 	}
-	pthread_mutex_unlock(&first->mutex);
-	pthread_mutex_lock(&second->mutex);
-	if (second->local_seq == 0)
-	{
-		if (coder->sim->n_coders % 2 == 1 && second->id == coder->sim->n_coders - 1)
-			reqs->second.arrival_seq = second->local_seq;
-		else
-			reqs->second.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
-		second->local_seq = 1;
-	}
-	else if (second->local_seq == 1)
-	{
-		if (coder->sim->n_coders % 2 == 1 && second->id == coder->sim->n_coders - 1)
-			reqs->second.arrival_seq = second->local_seq;
-		else
-			reqs->second.arrival_seq = (coder->id % 2 == 1) ? 0 : 1;
-		second->local_seq = 2;
-	}
-	else
-		reqs->second.arrival_seq = second->local_seq++;
-	if (!push_request(&second->wait_queue, reqs->second, coder->sim))
-	{
-		pthread_mutex_unlock(&second->mutex);
-		return (false);
-	}
-	pthread_mutex_unlock(&second->mutex);
+	pthread_mutex_unlock(&dongle->mutex);
 	return (true);
 }
 
@@ -107,7 +81,9 @@ bool	take_dongles(t_coder *coder)
 	set_order(&first, &second, coder);
 	reqs.first = create_request(coder);
 	reqs.second = create_request(coder);
-	if (!push_requests(coder, &reqs, first, second))
+	if (!push_requests(coder, &reqs, first))
+		return (false);
+	if (!push_requests(coder, &reqs, second))
 		return (false);
 	while (!is_stopped(coder->sim))
 	{

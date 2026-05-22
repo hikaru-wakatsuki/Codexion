@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/21 15:56:24 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 13:03:15 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,13 +20,6 @@ bool	is_higher_priority(t_request a, t_request b, t_sim *sim)
 		return (a.arrival_seq < b.arrival_seq);
 	return (a.coder_id < b.coder_id);
 }
-
-//static bool	conflicts_with(int coder_id, t_dongle *dongle, int n_coders)
-//{
-//    int left = (coder_id - 1 + n_coders) % n_coders;
-//    int right = coder_id % n_coders;
-//    return (dongle->id == left || dongle->id == right);
-//}
 
 static bool	no_higher_priority(t_dongle *dongle, t_dongle *neighbor,
 		t_request *req, t_sim *sim)
@@ -42,16 +35,6 @@ static bool	no_higher_priority(t_dongle *dongle, t_dongle *neighbor,
 		if (dongle->wait_queue.data[i].coder_id != req->coder_id
 			&& is_higher_priority(dongle->wait_queue.data[i], *req, sim))
 			return (false);
-		//{
-		//	j = 0;
-		//	while (j < neighbor->wait_queue.size)
-		//	{
-		//		if (neighbor->wait_queue.data[j].coder_id
-		//			== dongle->wait_queue.data[i].coder_id)
-		//			return (false);
-		//		j++;
-		//	}
-		//}
 		i++;
 	}
 	return (true);
