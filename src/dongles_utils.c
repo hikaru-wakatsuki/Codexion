@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/22 16:48:24 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:53:49 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,12 @@ bool	is_higher_priority(t_request a, t_request b, t_sim *sim)
 	return (a.coder_id < b.coder_id);
 }
 
-static bool	no_higher_priority(t_dongle *dongle, t_dongle *neighbor,
+static bool	no_higher_priority(t_dongle *dongle,
 		t_request *req, t_sim *sim)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	(void)j;
-	(void)neighbor;
 	while (i < dongle->wait_queue.size)
 	{
 		if (dongle->wait_queue.data[i].coder_id != req->coder_id
@@ -43,8 +40,8 @@ static bool	no_higher_priority(t_dongle *dongle, t_dongle *neighbor,
 static bool	can_take(t_dongle *first, t_dongle *second, t_req_pair *reqs,
 	t_sim *sim)
 {
-	return (no_higher_priority(first, second, &reqs->first, sim)
-		&& no_higher_priority(second, first, &reqs->second, sim)
+	return (no_higher_priority(first, &reqs->first, sim)
+		&& no_higher_priority(second, &reqs->second, sim)
 		&& first->owner_coder_id == -1
 		&& second->owner_coder_id == -1);
 }
