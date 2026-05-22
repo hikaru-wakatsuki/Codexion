@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/22 13:03:15 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:48:24 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,8 +63,8 @@ bool	try_take_dongles(t_coder *coder, t_dongle *first, t_dongle *second,
 		&& now >= first->cooldown_until_ms
 		&& now >= second->cooldown_until_ms)
 	{
-		remove_request(&first->wait_queue, reqs->first, sim);
-		remove_request(&second->wait_queue, reqs->second, sim);
+		pop_request(&first->wait_queue, sim);
+		pop_request(&second->wait_queue, sim);
 		first->owner_coder_id = coder->id;
 		second->owner_coder_id = coder->id;
 		pthread_mutex_unlock(&second->mutex);

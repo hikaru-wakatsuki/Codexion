@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/20 13:30:16 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:48:53 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ bool					take_dongles(t_coder *coder);
 void					release_dongle(t_coder *coder, t_dongle *dongle);
 // heap.c
 bool					push_request(t_heap *heap, t_request req, t_sim *sim);
-bool					remove_request(t_heap *heap, t_request req, t_sim *sim);
+t_request				pop_request(t_heap *heap, t_sim *sim);
 // main.c
 int						main(int argc, char *argv[]);
 // monitor_routine.c

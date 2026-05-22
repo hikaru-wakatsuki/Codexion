@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/04 10:01:00 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/20 13:27:53 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 16:50:43 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,27 +80,4 @@ t_request	pop_request(t_heap *heap, t_sim *sim)
 	heap->size--;
 	shift_down(heap, 0, sim);
 	return (top);
-}
-
-bool	remove_request(t_heap *heap, t_request req, t_sim *sim)
-{
-	int	idx;
-
-	idx = 0;
-	while (idx < heap->size)
-	{
-		if (heap->data[idx].coder_id == req.coder_id)
-			break ;
-		idx++;
-	}
-	if (idx == heap->size)
-		return (false);
-	heap->data[idx] = heap->data[heap->size - 1];
-	heap->size--;
-	if (idx < heap->size)
-	{
-		shift_up(heap, idx, sim);
-		shift_down(heap, idx, sim);
-	}
-	return (true);
 }
