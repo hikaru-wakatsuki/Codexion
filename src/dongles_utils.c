@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/07 02:06:31 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/22 16:53:49 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/22 17:02:48 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,11 @@ static bool	no_higher_priority(t_dongle *dongle,
 	return (true);
 }
 
-static bool	can_take(t_dongle *first, t_dongle *second, t_req_pair *reqs,
-	t_sim *sim)
+static bool	can_take(t_dongle *dongle, t_request *req, long now, t_sim *sim)
 {
-	return (no_higher_priority(first, &reqs->first, sim)
-		&& no_higher_priority(second, &reqs->second, sim)
-		&& first->owner_coder_id == -1
-		&& second->owner_coder_id == -1);
+	return (no_higher_priority(dongle, req, sim)
+		&& dongle->owner_coder_id == -1
+		&& now >= dongle->cooldown_until_ms);
 }
 
 bool	try_take_dongles(t_coder *coder, t_dongle *first, t_dongle *second,
@@ -56,9 +54,8 @@ bool	try_take_dongles(t_coder *coder, t_dongle *first, t_dongle *second,
 	now = get_time_ms();
 	pthread_mutex_lock(&first->mutex);
 	pthread_mutex_lock(&second->mutex);
-	if (can_take(first, second, reqs, sim)
-		&& now >= first->cooldown_until_ms
-		&& now >= second->cooldown_until_ms)
+	if (can_take(first, &reqs->first, now, sim)
+		&& can_take(second, &reqs->second, now, sim))
 	{
 		pop_request(&first->wait_queue, sim);
 		pop_request(&second->wait_queue, sim);
