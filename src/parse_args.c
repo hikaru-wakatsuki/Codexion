@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/26 20:19:40 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/23 16:29:10 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/23 16:46:55 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 static bool	is_non_negative_number(char *str)
 {
-	int	len;
-	int	i;
+	size_t	len;
+	int		i;
 
-	if (!*str)
+	if (!str || !*str)
 		return (false);
 	i = 0;
 	while (str[i])
@@ -26,7 +26,9 @@ static bool	is_non_negative_number(char *str)
 			return (false);
 		i++;
 	}
-	len = i;
+	while (*str == '0' && *(str + 1) != '\0')
+		str++;
+	len = strlen(str);
 	if (len > 10)
 		return (false);
 	else if (len == 10 && strcmp(str, "2147483647") > 0)
