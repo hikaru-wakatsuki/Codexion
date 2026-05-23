@@ -6,7 +6,7 @@
 /*   By: hwakatsu <hwakatsu@student.42tokyo.jp>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/04/24 22:55:56 by hwakatsu          #+#    #+#             */
-/*   Updated: 2026/05/22 16:48:53 by hwakatsu         ###   ########.fr       */
+/*   Updated: 2026/05/23 16:14:54 by hwakatsu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-# define MAX_CODERS 1000
+# define MAX_CODERS 10000000
 
 typedef struct s_sim	t_sim;
 
